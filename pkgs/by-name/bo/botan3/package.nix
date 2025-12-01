@@ -149,6 +149,9 @@ stdenv.mkDerivation (finalAttrs: {
   ]
   ++ lib.optionals (stdenv.hostPlatform.isMinGW) [
     "--os=mingw"
+  ]
+  ++ lib.optionals (stdenv.hostPlatform.isAndroid) [
+    "--os=android"
   ];
 
   configurePhase = ''
