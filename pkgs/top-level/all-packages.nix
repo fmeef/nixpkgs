@@ -10419,6 +10419,13 @@ with pkgs;
         stdenv = if stdenv.hostPlatform.isDarwin then llvmPackages_19.stdenv else stdenv;
       };
 
+
+  tdesktop-hardened =
+    kdePackages.callPackage ../applications/networking/instant-messengers/telegram/tdesktop-hardened
+      {
+        stdenv = if stdenv.hostPlatform.isDarwin then llvmPackages_19.stdenv else stdenv;
+      };
+
   termdown = python3Packages.callPackage ../applications/misc/termdown { };
 
   terminaltexteffects = with python3Packages; toPythonApplication terminaltexteffects;
