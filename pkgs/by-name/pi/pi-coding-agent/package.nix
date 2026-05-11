@@ -10,16 +10,16 @@
 }:
 buildNpmPackage (finalAttrs: {
   pname = "pi-coding-agent";
-  version = "0.67.68";
+  version = "0.73.0";
 
   src = fetchFromGitHub {
     owner = "badlogic";
     repo = "pi-mono";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-1k9tHb5Dle37a5qHm8xT14vI5cQZOb8ASGQ1KxzPCr4=";
+    hash = "sha256-oE4zMH5KEH185Vdp0CE221sa9rJJw35jFLlfhTa3Sg4=";
   };
 
-  npmDepsHash = "sha256-xQQZECkDuiCdu0FlKbAKgk6EatLf2jMIXKDfRRwN/gA=";
+  npmDepsHash = "sha256-rBlAzAnP9aif1tZ984AO4HftIJsDgLQ+02J3td4jcRg=";
 
   npmWorkspace = "packages/coding-agent";
 
@@ -81,7 +81,7 @@ buildNpmPackage (finalAttrs: {
 
   meta = {
     description = "Coding agent CLI with read, bash, edit, write tools and session management";
-    homepage = "https://shittycodingagent.ai/";
+    homepage = "https://pi.dev/";
     downloadPage = "https://www.npmjs.com/package/@mariozechner/pi-coding-agent";
     changelog = "https://github.com/badlogic/pi-mono/blob/main/packages/coding-agent/CHANGELOG.md";
     license = lib.licenses.mit;

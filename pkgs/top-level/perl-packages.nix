@@ -28,7 +28,7 @@ self:
 # cpan2nix assumes that perl-packages.nix will be used only with perl 5.30.3 or above
 assert lib.versionAtLeast perl.version "5.30.3";
 let
-  inherit (lib) maintainers teams;
+  inherit (lib) maintainers;
 
 in
 with self;
@@ -1337,10 +1337,10 @@ with self;
 
   Apppapersway = buildPerlPackage rec {
     pname = "App-papersway";
-    version = "2.001";
+    version = "3.000";
     src = fetchurl {
       url = "mirror://cpan/authors/id/S/SP/SPWHITTON/App-papersway-${version}.tar.gz";
-      hash = "sha256-Jx8MJdyr/tfumMhuCofQX0r3vWcVuDzfJGpCjq2+Odw=";
+      hash = "sha256-60H7zCtVbBfYOqVKw9X1EjOM7mzjSuPj5IwcDWhC+dE=";
     };
     buildInputs = [
       AnyEvent
@@ -3921,10 +3921,10 @@ with self;
 
   CatalystPluginSession = buildPerlPackage {
     pname = "Catalyst-Plugin-Session";
-    version = "0.43";
+    version = "0.44";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/H/HA/HAARG/Catalyst-Plugin-Session-0.43.tar.gz";
-      hash = "sha256-Xn180rlbH8IkS8buuPRPg11gPqB/WjkRCIHbYJKLFMQ=";
+      url = "mirror://cpan/authors/id/H/HA/HAARG/Catalyst-Plugin-Session-0.44.tar.gz";
+      hash = "sha256-CSyNgOA1D5Jdx2XycsDuKPmSMAsU9bhphBIgTmyFfEI=";
     };
     buildInputs = [
       TestDeep
@@ -3933,6 +3933,7 @@ with self;
     ];
     propagatedBuildInputs = [
       CatalystRuntime
+      CryptSysRandom
       ObjectSignature
     ];
     meta = {
@@ -7933,10 +7934,10 @@ with self;
 
   CryptX = buildPerlPackage {
     pname = "CryptX";
-    version = "0.087";
+    version = "0.088";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/M/MI/MIK/CryptX-0.087.tar.gz";
-      hash = "sha256-gHDsKVFg1I83bY/xssvwvxUtqfIDOTk4LwDxP3SM030=";
+      url = "mirror://cpan/authors/id/M/MI/MIK/CryptX-0.088.tar.gz";
+      hash = "sha256-kUn4t0JjRWbpgbmUn7fZs/Qa7zbvBOziG1HPNRU8SUA=";
     };
     meta = {
       description = "Cryptographic toolkit";
@@ -28193,10 +28194,10 @@ with self;
 
   Plack = buildPerlPackage {
     pname = "Plack";
-    version = "1.0050";
+    version = "1.0053";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/M/MI/MIYAGAWA/Plack-1.0050.tar.gz";
-      hash = "sha256-0mUa3oLrv/er4KOhifyTLa3Ed5GGzolGjlbQGJ6qbtQ=";
+      url = "mirror://cpan/authors/id/M/MI/MIYAGAWA/Plack-1.0053.tar.gz";
+      hash = "sha256-QPxEA0wWTpr3DdCP++5AjCQwLsDbMQ0pAd9xdTuxZ9o=";
     };
     buildInputs = [
       AuthenSimplePasswd
@@ -28226,6 +28227,7 @@ with self;
       TryTiny
     ];
     patches = [
+      ../development/perl-modules/Plack-xsendfile-disable-by-default-CVE-2026-7381.patch
       ../development/perl-modules/Plack-test-replace-DES-hash-with-bcrypt.patch
     ];
     meta = {
@@ -31355,10 +31357,10 @@ with self;
 
   Starman = buildPerlModule {
     pname = "Starman";
-    version = "0.4017";
+    version = "0.4018";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/M/MI/MIYAGAWA/Starman-0.4017.tar.gz";
-      hash = "sha256-b/q5FfMj9gCJ4+v4Urm5cH1pFyZt+K/XNw+sBL/f7k4=";
+      url = "mirror://cpan/authors/id/M/MI/MIYAGAWA/Starman-0.4018.tar.gz";
+      hash = "sha256-bY2yl9hRFB+k/3dI3/BVG+K6j5pELtnKrGRNvMmjbt0=";
     };
     buildInputs = [
       LWP
@@ -35965,10 +35967,10 @@ with self;
 
   TextCSV_XS = buildPerlPackage {
     pname = "Text-CSV_XS";
-    version = "1.52";
+    version = "1.62";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/H/HM/HMBRAND/Text-CSV_XS-1.52.tgz";
-      hash = "sha256-5BWqcFut+Es1ncTA8MmC8b9whIHaoUdW8xNufInA5B0=";
+      url = "mirror://cpan/authors/id/H/HM/HMBRAND/Text-CSV_XS-1.62.tgz";
+      hash = "sha256-FxBpPt2u/dVudNpCuqntZ25+rtKOvTA60jyYL+8rFBU=";
     };
     meta = {
       description = "Comma-Separated Values manipulation routines";
