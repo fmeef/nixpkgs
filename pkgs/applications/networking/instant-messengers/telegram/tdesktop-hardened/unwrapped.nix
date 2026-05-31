@@ -52,7 +52,7 @@ stdenv.mkDerivation (finalAttrs: {
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-DyDOoCn4Fd4HZhoNxxw1OketGgZ8d8ti5mxMDdgrvCs=";
+    hash = "sha256-c54JvAeZHq0YLq/PV8G0tt9EEKf64XZP8H4hjLTN1mg=";
   };
 
   nativeBuildInputs = [
