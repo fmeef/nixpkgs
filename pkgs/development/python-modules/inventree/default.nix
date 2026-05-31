@@ -18,7 +18,7 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "inventree";
-  version = "0.21.1";
+  version = "0.23.2";
   pyproject = true;
   __structuredAttrs = true;
 
@@ -26,7 +26,7 @@ buildPythonPackage (finalAttrs: {
     owner = "inventree";
     repo = "inventree-python";
     tag = finalAttrs.version;
-    hash = "sha256-n/iJ2/xFxwRFbZKjcrbWMnx2lp7ITJsyHDLcCtdmEDI=";
+    hash = "sha256-YGzy58AbDdZGqkRNw/mRpcmbzsP5rBk2H9diz9RDhfM=";
   };
 
   build-system = [
