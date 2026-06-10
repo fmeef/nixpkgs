@@ -34,6 +34,7 @@
   libicns,
   apple-sdk_15,
   nix-update-script,
+  kdePackages
 }:
 
 # Main reference:
@@ -45,14 +46,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.5";
+  version = "0.0.6";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-c54JvAeZHq0YLq/PV8G0tt9EEKf64XZP8H4hjLTN1mg=";
+    hash = "sha256-5DMzNqqW9If4VsH7yxjRYAJeqZIo2bKKMuz0M3mwA9s";
   };
 
   nativeBuildInputs = [
@@ -80,6 +81,7 @@ stdenv.mkDerivation (finalAttrs: {
     rnnoise
     tg_owt
     microsoft-gsl
+    kdePackages.qtshadertools
     boost
     ada
     (tdlib.override { tde2eOnly = true; })
