@@ -19,7 +19,7 @@
   ffmpeg_6,
   protobuf,
   openal-soft,
-  minizip-ng,
+  minizip-ng-compat,
   range-v3,
   minizip,
   tl-expected,
@@ -35,7 +35,8 @@
   libicns,
   apple-sdk_15,
   nix-update-script,
-  kdePackages
+  kdePackages,
+  qtshadertools
 }:
 
 # Main reference:
@@ -47,14 +48,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.9";
+  version = "0.0.10";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-KPAOoiu6+1ia0+cH1nZ7zv6T9B4Rsq7aSNVfJO2eDy0=";
+    hash = "sha256-qFFDuXcZRCDNcbg+1ogGtnj/9d9SqRWZBlESzmC5R8c=";
   };
 
   nativeBuildInputs = [
@@ -62,6 +63,7 @@ stdenv.mkDerivation (finalAttrs: {
     cmake
     ninja
     python3
+    qtshadertools
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     # to build bundled libdispatch
@@ -76,7 +78,7 @@ stdenv.mkDerivation (finalAttrs: {
     xxhash
     ffmpeg_6
     openal-soft
-    minizip-ng
+    minizip-ng-compat
     range-v3
     minizip
     tl-expected
