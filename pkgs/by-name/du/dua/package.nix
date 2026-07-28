@@ -10,13 +10,13 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "dua";
-  version = "2.37.1";
+  version = "2.38.1";
 
   src = fetchFromGitHub {
     owner = "Byron";
     repo = "dua-cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-FVkq+iLkVcug/SzQtzmupHc1nh+orqyOnqv0xr1Dg/Q=";
+    hash = "sha256-+Wp7hYqZ+lenleqQO+1gUvWZGpzYJ6dZCtVlCpE7JNQ=";
     # Remove unicode file names which leads to different checksums on HFS+
     # vs. other filesystems because of unicode normalisation.
     postFetch = ''
@@ -24,7 +24,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     '';
   };
 
-  cargoHash = "sha256-8lRpN3KcrK9x446buGVnHl0CcHVoLWl0slB7CAw37G8=";
+  cargoHash = "sha256-RmaKja7wWlYK9T1o6u5jNxy+0iQ1a51QBFm9x6kyH3A=";
 
   checkFlags = [
     # Skip interactive tests
@@ -56,7 +56,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     description = "Tool to conveniently learn about the disk usage of directories";
     homepage = "https://github.com/Byron/dua-cli";
     changelog = "https://github.com/Byron/dua-cli/blob/v${finalAttrs.version}/CHANGELOG.md";
-    license = with lib.licenses; [ mit ];
+    license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
       killercup
       defelo

@@ -1617,8 +1617,7 @@ in
           MemoryDenyWriteExecute =
             !(
               (builtins.any (mod: (mod.allowMemoryWriteExecute or false)) cfg.package.modules)
-              || cfg.lua.enable
-              || (cfg.package == pkgs.openresty)
+              || (lib.getName cfg.package == "openresty")
             );
           RestrictRealtime = true;
           RestrictSUIDSGID = true;
@@ -1753,6 +1752,8 @@ in
       rotate = 26;
       compress = true;
       delaycompress = true;
+      # Run postrotate script only once after rotation of all log files:
+      sharedscripts = true;
       postrotate = "[ ! -f /var/run/nginx/nginx.pid ] || kill -USR1 `cat /var/run/nginx/nginx.pid`";
     };
   };
