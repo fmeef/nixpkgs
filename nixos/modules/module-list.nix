@@ -210,6 +210,7 @@
   ./programs/ente-auth.nix
   ./programs/environment.nix
   ./programs/envision.nix
+  ./programs/ergohaven-entropy.nix
   ./programs/evince.nix
   ./programs/extra-container.nix
   ./programs/fcast-receiver.nix
@@ -290,6 +291,7 @@
   ./programs/noisetorch.nix
   ./programs/npm.nix
   ./programs/ns-usbloader.nix
+  ./programs/nushell.nix
   ./programs/nxdumpclient.nix
   ./programs/oblogout.nix
   ./programs/obs-studio.nix
@@ -308,7 +310,6 @@
   ./programs/qgroundcontrol.nix
   ./programs/qt5ct.nix
   ./programs/quark-goldleaf.nix
-  ./programs/regreet.nix
   ./programs/rog-control-center.nix
   ./programs/rush.nix
   ./programs/rust-motd.nix
@@ -636,6 +637,7 @@
   ./services/display-managers/lemurs.nix
   ./services/display-managers/ly.nix
   ./services/display-managers/plasma-login-manager.nix
+  ./services/display-managers/regreet.nix
   ./services/display-managers/sddm.nix
   ./services/editors/emacs.nix
   ./services/editors/haste.nix
@@ -885,7 +887,8 @@
   ./services/misc/gammu-smsd.nix
   ./services/misc/geoipupdate.nix
   ./services/misc/gitea.nix
-  ./services/misc/gitlab.nix
+  ./services/misc/gitlab/container-registry.nix
+  ./services/misc/gitlab/default.nix
   ./services/misc/gitolite.nix
   ./services/misc/gitweb.nix
   ./services/misc/gollum.nix
@@ -1329,6 +1332,7 @@
   ./services/networking/netbird/server.nix
   ./services/networking/netclient.nix
   ./services/networking/netfoil.nix
+  ./services/networking/netplan.nix
   ./services/networking/networkd-dispatcher.nix
   ./services/networking/networkmanager.nix
   ./services/networking/newt.nix
