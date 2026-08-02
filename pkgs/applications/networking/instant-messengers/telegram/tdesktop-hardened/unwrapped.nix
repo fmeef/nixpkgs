@@ -6,8 +6,8 @@
   pkg-config,
   cmake,
   ninja,
-  clang,
   python3,
+  qtshadertools,
   tdlib,
   tg_owt ? callPackage ./tg_owt.nix { inherit stdenv; },
   qtbase,
@@ -21,7 +21,6 @@
   openal-soft,
   minizip-ng-compat,
   range-v3,
-  minizip,
   tl-expected,
   hunspell,
   gobject-introspection,
@@ -29,14 +28,13 @@
   microsoft-gsl,
   boost,
   ada,
+  cmark-gfm,
   libavif,
   libheif,
   libjxl,
   libicns,
   apple-sdk_15,
   nix-update-script,
-  kdePackages,
-  qtshadertools
 }:
 
 # Main reference:
@@ -48,14 +46,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.11";
+  version = "0.0.12";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-nwxdhwoJOj8ocSM5uBXqptWc+r9epQbabyoL7q/B+dM=";
+    hash = "sha256-iVxxvDQQTlBpqPVFB7rTt0JN6bjz7zwjli3B1/QaKAU=";
   };
 
   nativeBuildInputs = [
@@ -66,8 +64,6 @@ stdenv.mkDerivation (finalAttrs: {
     qtshadertools
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
-    # to build bundled libdispatch
-    clang
     gobject-introspection
   ];
 
@@ -80,14 +76,13 @@ stdenv.mkDerivation (finalAttrs: {
     openal-soft
     minizip-ng-compat
     range-v3
-    minizip
     tl-expected
     rnnoise
     tg_owt
     microsoft-gsl
-    kdePackages.qtshadertools
     boost
     ada
+    cmark-gfm
     (tdlib.override { tde2eOnly = true; })
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
