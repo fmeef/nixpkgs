@@ -5,7 +5,6 @@
   fetchFromGitHub,
 
   # cargoDeps
-  fetchgit,
   rustPlatform,
 
   # nativeBuildInputs
@@ -80,7 +79,7 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "daft";
-  version = "0.7.21";
+  version = "0.7.24";
   pyproject = true;
   __structuredAttrs = true;
 
@@ -88,32 +87,19 @@ buildPythonPackage (finalAttrs: {
     owner = "Eventual-Inc";
     repo = "Daft";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-vz9lCm2zQaWM+9jPH2fnhGEQiCYPH0Jl477yaZDQ370=";
+    hash = "sha256-HCqkeN9kmQTvzlPlweeE1nYPf2YjLep2RUUIFRXlGGw=";
   };
 
-  cargoDeps =
-    (rustPlatform.importCargoLock.override {
-      fetchgit =
-        args:
-        if (args.url or null) == "https://github.com/Eventual-Inc/azure-sdk-for-rust" then
-          fetchgit (
-            args
-            // {
-              postFetch = (args.postFetch or "") + ''
-                substituteInPlace $out/services/Cargo.toml \
-                  --replace-fail '"mgmt/batch",' '"mgmt/batch", "svc/blobstorage",'
-              '';
-            }
-          )
-        else
-          fetchgit args;
-    })
-      {
-        lockFile = ./Cargo.lock;
-        outputHashes = {
-          "azure_core-0.21.0" = "sha256-I8kzIkguRa3REwii0xsFFpNhE90/QX5msXwE6rrzDlY=";
-        };
-      };
+  cargoDeps = rustPlatform.fetchCargoVendor {
+    inherit (finalAttrs) pname version src;
+    hash = "sha256-iKVKRI42G01yb2QQJn07hwPay2QGMyDhVeLUdwVIclQ=";
+
+    # azure-sdk-for-rust omits svc/blobstorage from the services workspace
+    postBuild = ''
+      substituteInPlace "$out"/git/*/services/Cargo.toml \
+        --replace-fail '"mgmt/batch",' '"mgmt/batch", "svc/blobstorage",'
+    '';
+  };
 
   postPatch = ''
     substituteInPlace Cargo.toml \

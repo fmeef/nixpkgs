@@ -11,17 +11,17 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "communique";
-  version = "1.2.3";
+  version = "1.3.1";
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "jdx";
     repo = "communique";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-F7m6PxPOuQlZFIVYBUl650JsaZVJJmC1c+6jMgmGgc8=";
+    hash = "sha256-gyws3jI+9Wece3RcqinKuB60O3gqi4i9DeRtgjrSD4s=";
   };
 
-  cargoHash = "sha256-KyGbkVNi2rHTJfIeeq6nVFDhkWmaKh/IZ6xiVxPaXWQ=";
+  cargoHash = "sha256-3xzayDdybEI5k3zQTvoQzjxM8TeWuaEn5Slp5AF+x8M=";
 
   nativeCheckInputs = [
     cacert

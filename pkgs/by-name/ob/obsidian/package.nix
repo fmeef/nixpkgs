@@ -65,6 +65,7 @@ let
   desktopItem = makeDesktopItem {
     name = "obsidian";
     desktopName = "Obsidian";
+    startupWMClass = "md.Obsidian";
     comment = "Knowledge base";
     icon = "obsidian";
     exec = "obsidian %u";
@@ -137,15 +138,14 @@ let
       appname
       meta
       ;
-    sourceRoot = "${appname}.app";
     nativeBuildInputs = [
       makeWrapper
       _7zz
     ];
     installPhase = ''
       runHook preInstall
-      mkdir -p $out/{Applications/${appname}.app,bin}
-      cp -R . $out/Applications/${appname}.app
+      mkdir -p $out/{Applications,bin}
+      cp -R ${appname}.app $out/Applications
       makeWrapper $out/Applications/${appname}.app/Contents/MacOS/${appname} $out/bin/obsidian
       makeWrapper $out/Applications/${appname}.app/Contents/MacOS/obsidian-cli $out/bin/obsidian-cli
       runHook postInstall
