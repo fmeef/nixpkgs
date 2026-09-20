@@ -95,10 +95,10 @@ stdenv.mkDerivation (finalAttrs: {
     kcoreaddons
     hunspell
   ]
-  ++ lib.optionals (finalAttrs.pname == "telegram-desktop-unwrapped" && stdenv.hostPlatform.isLinux) [
+  ++ lib.optionals (finalAttrs.pname == "tdesktop-hardened-unwrapped" && stdenv.hostPlatform.isLinux) [
     pango
   ]
-  ++ lib.optionals (finalAttrs.pname == "telegram-desktop-unwrapped") [
+  ++ lib.optionals (finalAttrs.pname == "tdesktop-hardened-unwrapped") [
     tlottie
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
