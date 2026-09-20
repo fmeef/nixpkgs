@@ -46,14 +46,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.17";
+  version = "0.0.18";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-DQiQOkB+y4CS3LoqmRsfDWdQaEM4r2lDpewf2ZJGy54=";
+    hash = "sha256-V9iTbnDG4xDVCVsrDs8pDohbzWWEh8osbUV/WzSMwPs=";
   };
 
   nativeBuildInputs = [
