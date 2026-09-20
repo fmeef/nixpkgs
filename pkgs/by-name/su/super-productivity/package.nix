@@ -1,7 +1,7 @@
 {
   buildNpmPackage,
   copyDesktopItems,
-  electron_41,
+  electron_43,
   fetchFromGitHub,
   lib,
   makeDesktopItem,
@@ -15,20 +15,20 @@
   cargo,
 }:
 let
-  electron = electron_41;
+  electron = electron_43;
   nodejs = nodejs_22;
 in
-buildNpmPackage rec {
+buildNpmPackage (finalAttrs: {
   pname = "super-productivity";
-  version = "18.16.0";
+  version = "19.0.1";
 
   inherit nodejs;
 
   src = fetchFromGitHub {
     owner = "super-productivity";
     repo = "super-productivity";
-    tag = "v${version}";
-    hash = "sha256-1Iu4aJLlT2VllAALcJFBV7GQ1+ujgHjolbkYLjGM1qI=";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-42Q+nv2zgS5dCS4hlDNqvU//hEgmFOgDLv2covy2P74=";
   };
 
   # Use custom fetcher for deps because super-productivity uses multiple
@@ -38,7 +38,7 @@ buildNpmPackage rec {
   npmDeps = stdenv.mkDerivation (
     lib.fetchers.normalizeHash { } {
       pname = "super-productivity-deps";
-      inherit version src;
+      inherit (finalAttrs) version src;
 
       nativeBuildInputs = [
         prefetch-npm-deps
@@ -74,7 +74,7 @@ buildNpmPackage rec {
       dontInstall = true;
 
       outputHashMode = "recursive";
-      hash = "sha256-qhHfHmQktHl2Ac0zdRbjuj/4G/zarh/m/K/xsfRz3TA=";
+      hash = "sha256-ApSPWa9t/xWM7oqbgmUI9mHrS+TyCoBP2sxCJLGFe7s=";
     }
   );
 
@@ -83,7 +83,7 @@ buildNpmPackage rec {
 
   cargoRoot = "electron/wayland-idle-helper";
   cargoDeps = rustPlatform.fetchCargoVendor {
-    inherit
+    inherit (finalAttrs)
       pname
       version
       src
@@ -112,6 +112,12 @@ buildNpmPackage rec {
     # not our app directory, so it would search the wrong location.
     substituteInPlace electron/idle-time-handler.ts \
       --replace-fail "path.dirname(process.execPath)" "path.dirname(app.getAppPath())"
+  ''
+  + lib.optionalString stdenv.hostPlatform.isDarwin ''
+    # build/icon.icns is checked in and already contains all ten macOS icon
+    # representations. Avoid regenerating it with sandbox-unavailable iconutil.
+    substituteInPlace electron-builder.yaml \
+      --replace-fail "beforePack: ./tools/beforePack.js" ""
   '';
 
   buildPhase = ''
@@ -205,4 +211,4 @@ buildNpmPackage rec {
     ];
     mainProgram = "superproductivity";
   };
-}
+})

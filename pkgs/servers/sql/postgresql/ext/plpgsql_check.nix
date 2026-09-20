@@ -8,13 +8,13 @@
 
 postgresqlBuildExtension (finalAttrs: {
   pname = "plpgsql-check";
-  version = "2.10.3";
+  version = "2.10.9";
 
   src = fetchFromGitHub {
     owner = "okbob";
     repo = "plpgsql_check";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-ZnZ+/3/ClMPmW0BTDvROeNAv9s8K+ipOGvh5qM/7+Zc=";
+    hash = "sha256-TBk5Hh6pneSeV1LxgR38EC3twr22dMuQwCV/uGLFpPI=";
   };
 
   passthru.tests.extension = postgresqlTestExtension {

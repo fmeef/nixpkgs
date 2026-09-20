@@ -53,6 +53,9 @@
   perlPackages,
   python3Packages,
   pkg-config,
+  autoconf,
+  automake,
+  libtool,
   cmake,
   ninja,
   libpaper,
@@ -671,7 +674,7 @@ allPkgLists
     // {
       # for backward compatibility
       latexindent = texlive.pkgs.latexindent;
-      pygmentex = texlive.pkgs.pigmentex;
+      pygmentex = texlive.pkgs.pygmentex;
     };
 
   combine =

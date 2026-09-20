@@ -54,6 +54,14 @@ in
 # the upstream repository's sources.
 super:
 lib.trivial.pipe super [
+  (patchExtension "appindicatorsupport@rgcjonas.gmail.com" (old: {
+    patches = [
+      (replaceVars ./extensionOverridesPatches/appindicatorsupport_at_rgcjonas.gmail.com.patch {
+        gjs = lib.getExe gjs;
+      })
+    ];
+  }))
+
   (patchExtension "apps-menu@gnome-shell-extensions.gcampax.github.com" (old: {
     patches = [
       (replaceVars
@@ -268,13 +276,6 @@ lib.trivial.pipe super [
     postPatch = ''
       # remove unused dangling symlink
       rm utilities-teatime.svg
-    '';
-  })
-
-  (patchExtension "named-workspaces@a31.at" {
-    postPatch = ''
-      # remove duplicate schema file
-      rm schemas/org.gnome.shell.extensions.workspace-name.gschema.xml
     '';
   })
 ]

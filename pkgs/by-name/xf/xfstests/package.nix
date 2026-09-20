@@ -38,11 +38,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "xfstests";
-  version = "2026.06.21";
+  version = "2026.09.02";
 
   src = fetchzip {
     url = "https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/snapshot/xfstests-dev-v${finalAttrs.version}.tar.gz";
-    hash = "sha256-hngS9Hnsz9XKQ42yh6mcXHiTOzL+Zk9hRpai7e2tU0E=";
+    hash = "sha256-jnwEcGUSkKW9afGQTUsWR7CNQECWz/sYdSaDx0hY1Uo=";
   };
 
   nativeBuildInputs = [
@@ -182,7 +182,9 @@ stdenv.mkDerivation (finalAttrs: {
     description = "Torture test suite for filesystems";
     homepage = "https://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git/";
     license = lib.licenses.gpl2Only;
-    maintainers = [ ];
+    maintainers = with lib.maintainers; [
+      alberand
+    ];
     platforms = lib.platforms.linux;
     mainProgram = "xfstests-check";
   };

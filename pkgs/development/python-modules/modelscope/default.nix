@@ -12,14 +12,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "modelscope";
-  version = "1.38.1";
+  version = "1.39.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "modelscope";
     repo = "modelscope";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-BTiK6rk9j5Wh6DZZ8eufzAyP8wWCEfIzQKeJ3fJzsjg=";
+    hash = "sha256-jG0g7G2cXVNFUB1ItHcC0wJg6Zj0oGkKGLhgHji3sPQ=";
   };
 
   build-system = [ setuptools ];
@@ -46,6 +46,9 @@ buildPythonPackage (finalAttrs: {
       kyehn
       doronbehar
       ryan4yin
+    ];
+    knownVulnerabilities = [
+      "CVE-2026-84202: Unsafe YAML Deserialization in Model Config Loading"
     ];
   };
 })

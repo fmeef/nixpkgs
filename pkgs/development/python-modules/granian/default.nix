@@ -4,6 +4,7 @@
   rustPlatform,
   cacert,
   buildPythonPackage,
+  granian,
   uvloop,
   click,
   setproctitle,
@@ -20,14 +21,14 @@
 
 buildPythonPackage rec {
   pname = "granian";
-  version = "2.7.9";
+  version = "2.8.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "emmett-framework";
     repo = "granian";
     tag = "v${version}";
-    hash = "sha256-SYbdLrE/LaPGpzsrW4FBWtKyTM1VTqJ6sWRVbLjvCM8=";
+    hash = "sha256-VFU9X3LY9KyZfDg0GE7mc+yIi+mb97GbijAebJkAbqM=";
   };
 
   # Granian forces a custom allocator for all the things it runs,
@@ -39,8 +40,9 @@ buildPythonPackage rec {
   ];
 
   cargoDeps = rustPlatform.fetchCargoVendor {
-    inherit pname version src;
-    hash = "sha256-DZZUWpTsKkJQ8ku1Hm5eKFNxhYVfxv7D2N9DLPS9+a4=";
+    pname = "granian";
+    inherit version src;
+    hash = "sha256-gZ68R84U4s63z1auQIO/id2gPf03qfNyp+6rg3CEV6g=";
   };
 
   nativeBuildInputs = with rustPlatform; [
@@ -94,6 +96,27 @@ buildPythonPackage rec {
   # and upstream claims it does not exist.
   # FIXME: root cause and fix this.
   doCheck = false;
+
+  # Make ofborg run checks.
+  # They're too buggy for hydra, but still a useful smell test
+  passthru.tests = {
+    # overridePythonAttrs is not available in finalAttrs.finalPackage
+    pytest = granian.overridePythonAttrs {
+      pname = "granian-with-check-phase";
+      # skip repeat build
+      buildPhase = ''
+        # runHook preBuild
+        die() { echo >&2 "$@"; exit 1; }
+        [[ ! -d dist ]] || die "ERROR: dist/ found at start of buildPhase"
+        cp -r ${granian.dist} dist
+        chmod -R +w dist/
+        runHook postBuild
+      '';
+      nativeBuildInputs = [ ]; # maturin overwrites buildPhase unconditionally
+      doCheck = true;
+      dontCheckPythonMetadata = true; # changed pname
+    };
+  };
 
   pythonImportsCheck = [ "granian" ];
 

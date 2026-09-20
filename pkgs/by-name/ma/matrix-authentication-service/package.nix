@@ -3,7 +3,7 @@
   rustPlatform,
   fetchFromGitHub,
   fetchPnpmDeps,
-  pnpm,
+  pnpm_11,
   pnpmConfigHook,
   nodejs,
   python3,
@@ -18,24 +18,27 @@
   buildPackages,
   nixosTests,
 }:
-
+let
+  pnpm = pnpm_11;
+in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "matrix-authentication-service";
-  version = "1.21.0";
+  version = "1.24.0";
 
   src = fetchFromGitHub {
     owner = "element-hq";
     repo = "matrix-authentication-service";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-4z+u1IM2pclccv9+IH8IWjCodDxWZmffbqWPC726sIg=";
+    hash = "sha256-LWGnfM7os9GT6fa/Vk1wAEp9m1L5rEL7tSPmgEKMNfQ=";
   };
 
-  cargoHash = "sha256-HQU0zaK7rLJnTX5WVZrqNEaT5HfFLDzs+pHRxx5XTaA=";
+  cargoHash = "sha256-jAJuRwhc+0IAikLyqctHuCQcS61iNj7iKWHJdRAqsAk=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
+    inherit pnpm;
     fetcherVersion = 4;
-    hash = "sha256-9a62WlBQW8lgXluMh+DM21CkFCqFYd7yUz220G1uTIY=";
+    hash = "sha256-DxEjMhYqZGbnobQ/F0WFXq7qaxSkWDcoZ0kmWJsdxEQ=";
   };
 
   pnpmRoot = "frontend";

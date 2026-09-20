@@ -572,12 +572,16 @@ lib.recursiveUpdate orig rec {
 
   # Use top-level git-latexdiff's version and src. NOTE that this derivation is
   # still different from top-level's `git-latexdiff`, due to __structuredAttrs
-  # enabled unconditionally. Still though this derivation produces a funcitonal
+  # enabled unconditionally. Still though this derivation produces a functional
   # binary.
   inherit git-latexdiff;
 
   # RISC-V: https://github.com/LuaJIT/LuaJIT/issues/628
   luajittex.binfiles = lib.optionals (lib.meta.availableOn stdenv.hostPlatform luajit) orig.luajittex.binfiles;
+  luajittex.formats = lib.optionals (lib.meta.availableOn stdenv.hostPlatform luajit) orig.luajittex.formats;
+  mflua.binfiles = lib.filter (
+    bin: lib.meta.availableOn stdenv.hostPlatform luajit || !lib.hasPrefix "mfluajit" bin
+  ) orig.mflua.binfiles;
 
   texdoc = {
     extraRevision = "-tlpdb${toString tlpdbVersion.revision}";

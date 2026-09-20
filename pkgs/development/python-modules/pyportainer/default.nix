@@ -17,14 +17,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "pyportainer";
-  version = "1.0.42";
+  version = "1.0.45";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "erwindouna";
     repo = "pyportainer";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-Mnn9cpTei7dJCPomON0XskvNDSEb+XP9tMihoN7vS8E=";
+    hash = "sha256-JQ17DT8NIqMpeNSlXUgSTB2Q4jCJpfaoYTsR8jLNDvY=";
   };
 
   build-system = [ hatchling ];

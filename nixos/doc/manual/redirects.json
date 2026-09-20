@@ -1,4 +1,19 @@
 {
+  "module-services-netbird-relay": [
+    "index.html#module-services-netbird-relay"
+  ],
+  "module-services-netbird-relay-quickstart": [
+    "index.html#module-services-netbird-relay-quickstart"
+  ],
+  "module-services-netbird-relay-tls": [
+    "index.html#module-services-netbird-relay-tls"
+  ],
+  "module-services-portmaster": [
+    "index.html#module-services-portmaster"
+  ],
+  "module-services-portmaster-declarative-configuration": [
+    "index.html#module-services-portmaster-declarative-configuration"
+  ],
   "module-hardware-facter": [
     "index.html#module-hardware-facter"
   ],
@@ -61,6 +76,18 @@
   ],
   "module-boot-plymouth-tpm2-totp-quick-start-enable": [
     "index.html#module-boot-plymouth-tpm2-totp-quick-start-enable"
+  ],
+  "module-services-cliproxyapi": [
+    "index.html#module-services-cliproxyapi"
+  ],
+  "module-services-cliproxyapi-authentication": [
+    "index.html#module-services-cliproxyapi-authentication"
+  ],
+  "module-services-cliproxyapi-authentication-cli": [
+    "index.html#module-services-cliproxyapi-authentication-cli"
+  ],
+  "module-services-cliproxyapi-authentication-management-api": [
+    "index.html#module-services-cliproxyapi-authentication-management-api"
   ],
   "module-services-keycloak-unix-socket": [
     "index.html#module-services-keycloak-unix-socket"
@@ -208,6 +235,24 @@
   "module-services-tdarr-server-only": [
     "index.html#module-services-tdarr-server-only"
   ],
+  "module-services-zapret2": [
+    "index.html#module-services-zapret2"
+  ],
+  "module-services-zapret2-configuration": [
+    "index.html#module-services-zapret2-configuration"
+  ],
+  "module-services-zapret2-configuration-firewall": [
+    "index.html#module-services-zapret2-configuration-firewall"
+  ],
+  "module-services-zapret2-configuration-lua-files": [
+    "index.html#module-services-zapret2-configuration-lua-files"
+  ],
+  "module-services-zapret2-configuration-profiles": [
+    "index.html#module-services-zapret2-configuration-profiles"
+  ],
+  "module-services-zapret2-quick-start": [
+    "index.html#module-services-zapret2-quick-start"
+  ],
   "module-virtualisation-xen": [
     "index.html#module-virtualisation-xen"
   ],
@@ -228,6 +273,9 @@
   ],
   "sec-override-nixos-test": [
     "index.html#sec-override-nixos-test"
+  ],
+  "sec-state-revision": [
+    "index.html#sec-state-revision"
   ],
   "sec-wireless-declarative": [
     "index.html#sec-wireless-declarative"
@@ -366,6 +414,9 @@
   ],
   "module-services-crab-hole-upstream-options": [
     "index.html#module-services-crab-hole-upstream-options"
+  ],
+  "module-services-firefox-syncserver-database": [
+    "index.html#module-services-firefox-syncserver-database"
   ],
   "module-services-firefox-syncserver-clients": [
     "index.html#module-services-firefox-syncserver-clients"
@@ -2895,5 +2946,11 @@
   ],
   "sec-release-13.10": [
     "release-notes.html#sec-release-13.10"
+  ],
+  "ch-services": [
+    "index.html#ch-services"
+  ],
+  "ch-reference": [
+    "index.html#ch-reference"
   ]
 }

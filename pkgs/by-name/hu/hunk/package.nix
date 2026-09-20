@@ -5,18 +5,20 @@
   fetchFromGitHub,
   nix-update-script,
   versionCheckHook,
+  installAgentSkills,
+  installShellFiles,
   writableTmpDirAsHomeHook,
 }:
 
 let
   pname = "hunk";
-  version = "0.17.7";
+  version = "0.21.1";
 
   src = fetchFromGitHub {
     owner = "modem-dev";
     repo = "hunk";
     tag = "v${version}";
-    hash = "sha256-0i1k5ktVfhmN30gOSAFZrrjzGW61vwTOZ3gw5aS+fd8=";
+    hash = "sha256-8faDOqDXSdp5j8WP07rTW0L44keCPpv9mWoXGKXgvpY=";
   };
 
   node_modules = stdenv.mkDerivation {
@@ -56,7 +58,7 @@ let
 
     dontFixup = true;
 
-    outputHash = "sha256-sCxRiPjzvOnNTCMdzl5fd/tTfTHM2TRLFPnX5YjsMXg=";
+    outputHash = "sha256-r3LXoIx7fHWyTTs19N4CU9mIWYsQxP0QVpstlvAu3D0=";
     outputHashMode = "recursive";
   };
 in
@@ -68,8 +70,20 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [
     bun
+    installAgentSkills
+    installShellFiles
     writableTmpDirAsHomeHook
   ];
+
+  # Teach `hunk skill path` to find the FHS layout under share/skills/$pname
+  # (https://github.com/NixOS/nixpkgs/issues/547426) instead of $out/skills.
+  postPatch = ''
+    substituteInPlace src/core/run/paths.ts \
+      --replace-fail \
+        'join("node_modules", "hunkdiff", skillRelativePath),' \
+        'join("node_modules", "hunkdiff", skillRelativePath),
+    join("share", "skills", "hunk", name, "SKILL.md"),'
+  '';
 
   configurePhase = ''
     runHook preConfigure
@@ -96,13 +110,13 @@ stdenv.mkDerivation {
     runHook postBuild
   '';
 
+  dontInstallAgentSkills = true;
   installPhase = ''
     runHook preInstall
 
-    install -Dm755 hunk $out/bin/hunk
-    mkdir -p $out/share/hunk
-    cp -R skills $out/share/hunk/skills
-    ln -s share/hunk/skills $out/skills
+    installBin hunk
+    installSkill skills/hunk-extensions hunk
+    installSkill skills/hunk-review hunk
 
     runHook postInstall
   '';
@@ -122,6 +136,7 @@ stdenv.mkDerivation {
 
     $out/bin/hunk --version | grep -F ${version}
     test -f "$($out/bin/hunk skill path)"
+    test -f "$($out/bin/hunk skill path hunk-extensions)"
 
     runHook postInstallCheck
   '';

@@ -1,8 +1,9 @@
 {
   lib,
   stdenv,
-  fetchFromGitea,
+  fetchzip,
   gitUpdater,
+  bashNonInteractive,
   tk,
   tclPackages,
   tcl,
@@ -12,32 +13,20 @@
       lib.warn "tkremind is deprecated and should be removed; use withGui instead." tkremind
     else
       true,
-  writeText,
 }:
 
-tcl.mkTclDerivation rec {
+tcl.mkTclDerivation (finalAttrs: {
   pname = "remind";
-  version = "06.02.08";
+  version = "06.02.10";
 
-  src =
-    let
-      domain = "git.skoll.ca";
-      netrc = writeText "netrc" ''
-        machine ${domain}
-        login notabot
-        password notabot
-      '';
-    in
-    fetchFromGitea {
-      inherit domain;
-      owner = "Skollsoft-Public";
-      repo = "Remind";
-      rev = version;
-      hash = "sha256-+5ms52n5W2fmW7YhloB67vI0gF4+q8i1CyciSvY5lg0=";
-      netrcPhase = lib.optionalString stdenv.hostPlatform.isDarwin ''
-        cp ${netrc} netrc
-      '';
-    };
+  src = fetchzip {
+    url = "https://dianne.skoll.ca/projects/remind/download/remind-${finalAttrs.version}.tar.gz";
+    hash = "sha256-R6kceXLzg5CRMYAgMyhnmKxWT49ayXIFm/IpXuDgl8I=";
+  };
+
+  buildInputs = [
+    bashNonInteractive
+  ];
 
   propagatedBuildInputs = lib.optionals withGui [
     tclPackages.tcllib
@@ -54,11 +43,13 @@ tcl.mkTclDerivation rec {
       --replace-fail 'set Rem2PDF "rem2pdf"' "set Rem2PDF \"$out/bin/rem2pdf\""
   '';
 
-  env.NIX_CFLAGS_COMPILE = lib.optionalString stdenv.hostPlatform.isDarwin (toString [
+  env = lib.optionalAttrs stdenv.hostPlatform.isDarwin {
     # On Darwin setenv and unsetenv are defined in stdlib.h from libSystem
-    "-DHAVE_SETENV"
-    "-DHAVE_UNSETENV"
-  ]);
+    NIX_CFLAGS_COMPILE = toString [
+      "-DHAVE_SETENV"
+      "-DHAVE_UNSETENV"
+    ];
+  };
 
   passthru.updateScript = gitUpdater {
     ignoredVersions = "-BETA";
@@ -76,4 +67,4 @@ tcl.mkTclDerivation rec {
     mainProgram = "remind";
     platforms = lib.platforms.unix;
   };
-}
+})

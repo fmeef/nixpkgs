@@ -28,13 +28,13 @@ stdenv.mkDerivation (finalAttrs: {
   __structuredAttrs = true;
 
   pname = "musescore-evolution";
-  version = "3.7.0-unstable-2026-07-25";
+  version = "3.7.0-unstable-2026-09-13";
 
   src = fetchFromGitHub {
     owner = "Jojo-Schmitz";
     repo = "MuseScore";
-    rev = "bbd207db6b79f905274d561819bf0773b092191c";
-    hash = "sha256-XWGTWMhUnUEYR5VEE69jCZ3p/NN+r2bu6BKLs+w1KDc=";
+    rev = "2cdb852980595176f95442c06cb7960afae40e1b";
+    hash = "sha256-Ghmcd2dEc2H2lNwEiSwax1LDTHVMn0MbUiud564O0ds=";
   };
 
   patches = [
@@ -46,6 +46,9 @@ stdenv.mkDerivation (finalAttrs: {
   # Download manually at Help > Manage Resources
   cmakeFlags = [
     (lib.cmakeBool "DOWNLOAD_SOUNDFONT" false)
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    (lib.cmakeFeature "CMAKE_CXX_STANDARD" "17")
   ];
 
   qtWrapperArgs = [
