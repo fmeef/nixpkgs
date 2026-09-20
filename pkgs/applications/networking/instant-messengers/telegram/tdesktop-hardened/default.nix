@@ -2,7 +2,7 @@
   callPackage,
   lib,
   stdenv,
-  pname ? "tdesktop-hardened",
+  pname ? "telegram-desktop",
   unwrapped ? callPackage ./unwrapped.nix { inherit stdenv; },
   qtbase,
   qtimageformats,

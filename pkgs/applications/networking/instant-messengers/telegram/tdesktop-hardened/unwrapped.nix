@@ -16,7 +16,7 @@
   kcoreaddons,
   lz4,
   xxhash,
-  ffmpeg_6,
+  ffmpeg,
   protobuf,
   openal-soft,
   minizip-ng-compat,
@@ -28,7 +28,10 @@
   microsoft-gsl,
   boost,
   ada,
+  pango,
+  tlottie,
   cmark-gfm,
+  libfido2,
   libavif,
   libheif,
   libjxl,
@@ -72,7 +75,7 @@ stdenv.mkDerivation (finalAttrs: {
     qtsvg
     lz4
     xxhash
-    ffmpeg_6
+    ffmpeg
     openal-soft
     minizip-ng-compat
     range-v3
@@ -83,6 +86,7 @@ stdenv.mkDerivation (finalAttrs: {
     boost
     ada
     cmark-gfm
+    libfido2
     (tdlib.override { tde2eOnly = true; })
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
@@ -90,6 +94,12 @@ stdenv.mkDerivation (finalAttrs: {
     qtwayland
     kcoreaddons
     hunspell
+  ]
+  ++ lib.optionals (finalAttrs.pname == "telegram-desktop-unwrapped" && stdenv.hostPlatform.isLinux) [
+    pango
+  ]
+  ++ lib.optionals (finalAttrs.pname == "telegram-desktop-unwrapped") [
+    tlottie
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_15
