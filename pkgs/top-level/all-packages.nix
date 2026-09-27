@@ -1891,9 +1891,6 @@ with pkgs;
 
   cudaPackages = recurseIntoAttrs cudaPackages_12;
 
-  # TODO: move to alias
-  cudatoolkit = cudaPackages.cudatoolkit;
-
   dconf2nix = callPackage ../development/tools/haskell/dconf2nix { };
 
   inherit (callPackages ../applications/networking/p2p/deluge { })
@@ -1984,8 +1981,6 @@ with pkgs;
   flatpak-builder = callPackage ../development/tools/flatpak-builder {
     binutils = binutils-unwrapped;
   };
-
-  findutils = callPackage ../tools/misc/findutils { };
 
   bsd-fingerd = bsd-finger.override {
     buildProduct = "daemon";
@@ -2315,7 +2310,10 @@ with pkgs;
 
   nanoemoji = with python3Packages; toPythonApplication nanoemoji;
 
-  buildNavidromePlugin = callPackage ../by-name/na/navidrome/plugins/build-plugin.nix { };
+  buildNavidromeGoPlugin = callPackage ../by-name/na/navidrome/plugins/build-go-plugin.nix { };
+
+  buildNavidromeRustPlugin = callPackage ../by-name/na/navidrome/plugins/build-rust-plugin.nix { };
+
   navidromePlugins = recurseIntoAttrs (
     lib.makeExtensible (
       self:
@@ -2557,6 +2555,8 @@ with pkgs;
   ome_zarr = with python3Packages; toPythonApplication ome-zarr;
 
   ophcrack-cli = ophcrack.override { enableGui = false; };
+
+  openbaoPlugins = callPackage ../by-name/op/openbao/plugins.nix { };
 
   openntpd_nixos = openntpd.override {
     privsepUser = "ntp";
@@ -2917,9 +2917,6 @@ with pkgs;
   vimpager = callPackage ../tools/misc/vimpager { };
   vimpager-latest = callPackage ../tools/misc/vimpager/latest.nix { };
 
-  voxtype-vulkan = callPackage ../by-name/vo/voxtype/package.nix { vulkanSupport = true; };
-  voxtype-onnx = callPackage ../by-name/vo/voxtype/package.nix { onnxSupport = true; };
-
   openconnectPackages = {
     inherit openconnect openconnect_openssl;
   };
@@ -3051,6 +3048,9 @@ with pkgs;
   powerline = with python3Packages; toPythonApplication powerline;
 
   ### DEVELOPMENT / COMPILERS
+  temurin-bin-27 = javaPackages.compiler.temurin-bin.jdk-27;
+  temurin-jre-bin-27 = javaPackages.compiler.temurin-bin.jre-27;
+
   temurin-bin-26 = javaPackages.compiler.temurin-bin.jdk-26;
   temurin-jre-bin-26 = javaPackages.compiler.temurin-bin.jre-26;
 
@@ -3791,17 +3791,19 @@ with pkgs;
     julia_110-bin
     julia_111-bin
     julia_112-bin
+    julia_113-bin
     julia_110
     julia_111
     julia_112
+    julia_113
     ;
 
   julia-lts = julia_110-bin;
-  julia-stable = julia_112;
+  julia-stable = julia_113;
   julia = julia-stable;
 
   julia-lts-bin = julia_110-bin;
-  julia-stable-bin = julia_112-bin;
+  julia-stable-bin = julia_113-bin;
   julia-bin = julia-stable-bin;
 
   kotlin = callPackage ../development/compilers/kotlin { };
@@ -4040,6 +4042,7 @@ with pkgs;
     cargo-pgrx_0_16_1
     cargo-pgrx_0_17_0
     cargo-pgrx_0_18_0
+    cargo-pgrx_0_19_0
     cargo-pgrx
     ;
 
@@ -5099,8 +5102,6 @@ with pkgs;
 
   libtool = libtool_2;
 
-  libtool_1_5 = callPackage ../development/tools/misc/libtool { };
-
   libtool_2 = callPackage ../development/tools/misc/libtool/libtool2.nix { };
 
   linuxkit = callPackage ../development/tools/misc/linuxkit {
@@ -5407,8 +5408,6 @@ with pkgs;
   niv = lib.getBin (haskell.lib.compose.justStaticExecutables haskellPackages.niv);
 
   ormolu = lib.getBin (haskell.lib.compose.justStaticExecutables haskellPackages.ormolu);
-
-  ceedling = callPackage ../development/tools/ceedling { };
 
   celt = callPackage ../development/libraries/celt { };
   celt_0_7 = callPackage ../development/libraries/celt/0.7.nix { };
@@ -8140,6 +8139,28 @@ with pkgs;
       This package provides the Noto Fonts, but only for latin, greek
       and cyrillic scripts, as well as some extra fonts.
     '';
+  };
+
+  notonoto-35 = notonoto.override {
+    width35 = true;
+  };
+
+  notonoto-console = notonoto.override {
+    console = true;
+  };
+
+  notonoto-hs = notonoto.override {
+    hideZenkakuSpace = true;
+  };
+
+  notonoto-hs-35 = notonoto.override {
+    width35 = true;
+    hideZenkakuSpace = true;
+  };
+
+  notonoto-hs-console = notonoto.override {
+    console = true;
+    hideZenkakuSpace = true;
   };
 
   openmoji-color = callPackage ../data/fonts/openmoji { fontFormats = [ "glyf_colr_0" ]; };

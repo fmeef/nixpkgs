@@ -292,6 +292,7 @@ in
   aria2 = runTest ./aria2.nix;
   armagetronad = runTest ./armagetronad.nix;
   artalk = runTest ./artalk.nix;
+  asynch = runTest ./asynch.nix;
   atd = runTest ./atd.nix;
   atop = import ./atop.nix { inherit pkgs runTest; };
   atticd = runTest ./atticd.nix;
@@ -422,6 +423,7 @@ in
   cgit = runTest ./cgit.nix;
   charliecloud = runTest ./charliecloud.nix;
   chhoto-url = runTest ./chhoto-url.nix;
+  chipass = runTest ./chipass.nix;
   chromadb = runTest ./chromadb.nix;
   chromium = (handleTestOn [ "aarch64-linux" "x86_64-linux" ] ./chromium.nix { }).stable or { };
   chrony = runTestOn [ "aarch64-linux" "x86_64-linux" ] ./chrony.nix;
@@ -466,10 +468,12 @@ in
   containers-bridge = runTest ./containers-bridge.nix;
   containers-custom-pkgs = runTest ./containers-custom-pkgs.nix;
   containers-ephemeral = runTest ./containers-ephemeral.nix;
+  containers-eval = import ./containers-eval.nix { inherit pkgs; };
   containers-extra_veth = runTest ./containers-extra_veth.nix;
   containers-gateway = runTest ./containers-gateway.nix;
   containers-hosts = runTest ./containers-hosts.nix;
   containers-imperative = runTest ./containers-imperative.nix;
+  containers-imperative-no-daemon = runTest ./containers-imperative-no-daemon.nix;
   containers-ip = runTest ./containers-ip.nix;
   containers-ipv6-slaac = runTest ./containers-ipv6-slaac.nix;
   containers-macvlans = runTest ./containers-macvlans.nix;
@@ -789,6 +793,7 @@ in
   gollum = runTest ./gollum.nix;
   gonic = runTest ./gonic.nix;
   google-oslogin = runTest ./google-oslogin;
+  gophernicus = runTest ./gophernicus.nix;
   gopro-tool = runTest ./gopro-tool.nix;
   goss = runTest ./goss.nix;
   gotenberg = runTest ./gotenberg.nix;
@@ -802,7 +807,9 @@ in
   graphite = runTest ./graphite.nix;
   grav = runTest ./web-apps/grav.nix;
   graylog = runTest ./graylog.nix;
+  greenlight = runTest ./greenlight.nix;
   greetd-no-shadow = runTest ./greetd-no-shadow.nix;
+  grist = runTest ./grist.nix;
   grocy = runTest ./grocy.nix;
   grow-partition = runTest ./grow-partition.nix;
   grub = {
@@ -875,7 +882,6 @@ in
   homebridge = runTest ./homebridge.nix;
   homepage-dashboard = runTest ./homepage-dashboard.nix;
   homer = handleTest ./homer { };
-  honk = runTest ./honk.nix;
   hoogle = runTest ./hoogle.nix;
   hostname = import ./hostname.nix {
     inherit pkgs runTest;
@@ -1054,6 +1060,7 @@ in
   linkding = runTest ./web-apps/linkding.nix;
   linkding-postgres = runTest ./web-apps/linkding-postgres.nix;
   linkwarden = runTest ./web-apps/linkwarden.nix;
+  linux-builder-vz-store-gc = runTest ./linux-builder-vz-store-gc.nix;
   listmonk = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./listmonk.nix { };
   litellm = runTest ./litellm.nix;
   litestream = runTest ./litestream.nix;
@@ -1721,6 +1728,7 @@ in
   sonic-server = runTest ./sonic-server.nix;
   spacecookie = runTest ./spacecookie.nix;
   spark = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./spark { };
+  speechd = runTest ./speechd.nix;
   speedtest-tracker = runTest ./speedtest-tracker.nix;
   spiped = runTest ./spiped.nix;
   spire = runTest ./spire.nix;
@@ -2061,6 +2069,7 @@ in
   xautolock = runTest ./xautolock.nix;
   xfce = runTest ./xfce.nix;
   xfce-wayland = runTest ./xfce-wayland.nix;
+  xinetd = runTest ./xinetd.nix;
   xmonad = runTest ./xmonad.nix;
   xmonad-xdg-autostart = runTest ./xmonad-xdg-autostart.nix;
   xpadneo = runTest ./xpadneo.nix;
