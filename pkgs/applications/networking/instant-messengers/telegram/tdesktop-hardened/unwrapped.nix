@@ -42,21 +42,30 @@
 
 # Main reference:
 # - This package was originally based on the Arch package but all patches are now upstreamed:
-#   https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/telegram-desktop
+#   https://git.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/tdesktop-hardened
 # Other references that could be useful:
-# - https://git.alpinelinux.org/aports/tree/testing/telegram-desktop/APKBUILD
-# - https://github.com/void-linux/void-packages/blob/master/srcpkgs/telegram-desktop/template
+# - https://git.alpinelinux.org/aports/tree/testing/tdesktop-hardened/APKBUILD
+# - https://github.com/void-linux/void-packages/blob/master/srcpkgs/tdesktop-hardened/template
 
+let
+  needsPangoTlottie = [
+    "64gram-unwrapped"
+    "ayugram-desktop-unwrapped"
+    "kotatogram-desktop-unwrapped"
+    "tdesktop-hardened-unwrapped"
+  ];
+in
 stdenv.mkDerivation (finalAttrs: {
+
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.19";
+  version = "0.0.20";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-KRyxXwwAOQJMSRS5RYwh2Fgh5njE/rZiMNQBXYAbXxE=";
+    hash = "sha256-lRIxpIFHQygL254WUJT78KuuLAgdJtf6DvsolySa/Zo=";
   };
 
   nativeBuildInputs = [
@@ -95,10 +104,10 @@ stdenv.mkDerivation (finalAttrs: {
     kcoreaddons
     hunspell
   ]
-  ++ lib.optionals (finalAttrs.pname == "tdesktop-hardened-unwrapped" && stdenv.hostPlatform.isLinux) [
+  ++ lib.optionals (lib.elem finalAttrs.pname needsPangoTlottie && stdenv.hostPlatform.isLinux) [
     pango
   ]
-  ++ lib.optionals (finalAttrs.pname == "tdesktop-hardened-unwrapped") [
+  ++ lib.optionals (lib.elem finalAttrs.pname needsPangoTlottie) [
     tlottie
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
@@ -145,6 +154,6 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://desktop.telegram.org/";
     changelog = "https://github.com/telegramdesktop/tdesktop/releases/tag/v${finalAttrs.version}";
     maintainers = with lib.maintainers; [ nickcao ];
-    mainProgram = "Telegram";
+    mainProgram = "TDesktop Hardened";
   };
 })
