@@ -36,6 +36,7 @@
   libheif,
   libjxl,
   libicns,
+  wallet-engine,
   apple-sdk_15,
   nix-update-script,
 }:
@@ -54,9 +55,11 @@ let
     "kotatogram-desktop-unwrapped"
     "tdesktop-hardened-unwrapped"
   ];
+  needsWalletEngine = [
+    "tdesktop-hardened-unwrapped"
+  ];
 in
 stdenv.mkDerivation (finalAttrs: {
-
   pname = "tdesktop-hardened-unwrapped";
   version = "0.0.20";
 
@@ -110,6 +113,9 @@ stdenv.mkDerivation (finalAttrs: {
   ++ lib.optionals (lib.elem finalAttrs.pname needsPangoTlottie) [
     tlottie
   ]
+  ++ lib.optionals (lib.elem finalAttrs.pname needsWalletEngine) [
+    wallet-engine
+  ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_15
     libicns
@@ -154,6 +160,6 @@ stdenv.mkDerivation (finalAttrs: {
     homepage = "https://desktop.telegram.org/";
     changelog = "https://github.com/telegramdesktop/tdesktop/releases/tag/v${finalAttrs.version}";
     maintainers = with lib.maintainers; [ nickcao ];
-    mainProgram = "TDesktop Hardened";
+    mainProgram = "Telegram";
   };
 })
