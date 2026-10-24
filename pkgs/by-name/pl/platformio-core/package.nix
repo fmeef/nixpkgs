@@ -58,6 +58,9 @@ buildPythonApplication rec {
     (replaceVars ./interpreter.patch {
       interpreter = (python3Packages.python.withPackages (_: dependencies)).interpreter;
     })
+    (replaceVars ./use-local-spdx-license-list.patch {
+      spdx_license_list_data = spdx-license-list-data.json;
+    })
     ./missing-udev-rules-nixos.patch
     (fetchpatch {
       # restore PYTHONPATH when calling scons
