@@ -12,7 +12,7 @@ mkNginxPlugin (finalAttrs: {
   src = fetchFromGitHub {
     owner = "google";
     repo = "ngx_brotli";
-    rev = "a71f9312c2deb28875acc7bacfdd5695a111aa53";
+    rev = "53e0fb55f250f48fe80c0ddbf6c0f7103cdbaae1";
     hash = "sha256-5XSEqXyaIKoUzs1OC6WGPwqpx8JWaE0aMlfjvOoYs3U=";
   };
 
