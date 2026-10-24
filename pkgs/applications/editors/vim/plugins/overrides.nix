@@ -262,11 +262,17 @@ assertNoAdditions {
   };
 
   atlas-nvim = super.atlas-nvim.overrideAttrs {
+    nvimSkipModules = [
+      # Requires Diffview plugin initialization to populate DiffviewGlobal.
+      "atlas.pulls.diff.diffview.keymaps"
+    ];
     runtimeDeps = [
       curl
       gitMinimal
     ];
     checkInputs = with self; [
+      codediff-nvim
+      diffview-nvim
       fzf-lua
       snacks-nvim
     ];
@@ -2782,7 +2788,6 @@ assertNoAdditions {
   neogit = super.neogit.overrideAttrs {
     # Optional diffview integration
     checkInputs = [ self.diffview-nvim ];
-    dependencies = [ self.plenary-nvim ];
     nvimSkipModules = [
       # E5108: Error executing lua ...vim-2024-06-13/lua/diffview/api/views/diff/diff_view.lua:13: attempt to index global 'DiffviewGlobal' (a nil value)
       # Requires diffview-nvim's plugin script to be sourced.

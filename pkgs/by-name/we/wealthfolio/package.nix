@@ -19,20 +19,20 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "wealthfolio";
-  version = "3.9.1";
+  version = "3.11.0";
 
   src = fetchFromGitHub {
     owner = "wealthfolio";
     repo = "wealthfolio";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-ozdNgUytQMWzPf7N+8x2boNC/GgxMmzGzAnioGW20VA=";
+    hash = "sha256-1caBvxUE4JRcRyHwyxfxVITF7QMWjWnnoIkkBXfUh0g=";
   };
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) src pname version;
     pnpm = pnpm_10;
     fetcherVersion = 4;
-    hash = "sha256-j9rqB5RYpoyQP58erDE5r1Kx7Aq9vOQbiOTBzGVoe9k=";
+    hash = "sha256-InrKZIkoQPNpH+X5oolAUwAs9HtkG6F9ew7sfaYykpY=";
   };
 
   cargoRoot = ".";
@@ -45,7 +45,7 @@ stdenv.mkDerivation (finalAttrs: {
       src
       cargoRoot
       ;
-    hash = "sha256-skElXNXFcTwPv+rLKY90He8XLZfVrOJ8jYC4kL2vj9c=";
+    hash = "sha256-zim5nmTBsxvZqU7iobPf5orM0MAJLoXq5rvNgeM8+LE=";
   };
 
   nativeBuildInputs = [
@@ -69,6 +69,12 @@ stdenv.mkDerivation (finalAttrs: {
   env.OPENSSL_NO_VENDOR = "1";
 
   postPatch = ''
+    # Use the system CA certificates instead of the bundled Mozilla roots.
+    substituteInPlace crates/http/src/lib.rs \
+      --replace-fail \
+        'reqwest::Client::builder().tls_certs_only(ROOTS.iter().cloned())' \
+        'reqwest::Client::builder()'
+
     jq \
       '.plugins.updater.endpoints = [ ]
       | .bundle.createUpdaterArtifacts = false' \

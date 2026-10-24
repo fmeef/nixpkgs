@@ -6771,10 +6771,10 @@ with self;
 
   CpanelJSONXS = buildPerlPackage {
     pname = "Cpanel-JSON-XS";
-    version = "4.42";
+    version = "4.80";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-4.42.tar.gz";
-      hash = "sha256-4awvqx46bS2ZjTRAxgAGc2W9x9vwyPKyBZy85LTIMXM=";
+      url = "mirror://cpan/authors/id/R/RU/RURBAN/Cpanel-JSON-XS-4.80.tar.gz";
+      hash = "sha256-CAwSU3epKmCESuydRTKDbKFEcDmG4xmMyjgjrXkJqiU=";
     };
     meta = {
       description = "CPanel fork of JSON::XS, fast and correct serializing";
@@ -17474,6 +17474,9 @@ with self;
       TestNoWarnings
     ];
     propagatedBuildInputs = [ pkgs.zlib ];
+    # -ffast-math makes GCC emit libmvec calls (e.g. _ZGVbN2v_cos), so link libm
+    # explicitly to pull in libmvec through glibc's AS_NEEDED linker script.
+    NIX_LDFLAGS = "-lm";
     makeMakerFlags = [
       "--with-jpeg-includes=${pkgs.libjpeg.dev}/include"
       "--with-jpeg-libs=${pkgs.libjpeg.out}/lib"
@@ -20901,11 +20904,16 @@ with self;
 
   MathBaseConvert = buildPerlPackage {
     pname = "Math-Base-Convert";
-    version = "0.11";
+    version = "0.13";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/M/MI/MIKER/Math-Base-Convert-0.11.tar.gz";
-      hash = "sha256-jAlxNV8kyTt553rVSkVwCQoaWY/Lm4b1wX66QvOLQOA=";
+      url = "mirror://cpan/authors/id/M/MI/MIKER/Math-Base-Convert-0.13.tar.gz";
+      hash = "sha256-KJwMM7yYhts9ws+UnY4Ksk42xnuegzNVlB1wqvNRntI=";
     };
+    # Fix reproducibility, based on https://rt.cpan.org/Public/Bug/Display.html?id=119885
+    postPatch = ''
+      substituteInPlace bitmaps \
+        --replace-fail 'localtime()' 'gmtime($ENV{SOURCE_DATE_EPOCH})'
+    '';
     meta = {
       description = "Very fast base to base conversion";
       license = with lib.licenses; [
@@ -36222,10 +36230,10 @@ with self;
 
   TextCSV_XS = buildPerlPackage {
     pname = "Text-CSV_XS";
-    version = "1.62";
+    version = "1.65";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/H/HM/HMBRAND/Text-CSV_XS-1.62.tgz";
-      hash = "sha256-FxBpPt2u/dVudNpCuqntZ25+rtKOvTA60jyYL+8rFBU=";
+      url = "mirror://cpan/authors/id/H/HM/HMBRAND/Text-CSV_XS-1.65.tgz";
+      hash = "sha256-TwwWRXyH3vKVqZTpxLo5eouq+tls768tYUgxJfkP+XQ=";
     };
     meta = {
       description = "Comma-Separated Values manipulation routines";
@@ -39352,10 +39360,10 @@ with self;
 
   XMLTwig = buildPerlPackage {
     pname = "XML-Twig";
-    version = "3.52";
+    version = "3.54";
     src = fetchurl {
-      url = "mirror://cpan/authors/id/M/MI/MIROD/XML-Twig-3.52.tar.gz";
-      hash = "sha256-/vdYJsJPK4d9Cg0mRSEvxPuXVu1NJxFhSsFcSX6GgK0=";
+      url = "mirror://cpan/authors/id/M/MI/MIROD/XML-Twig-3.54.tar.gz";
+      hash = "sha256-C3RKlzegcPlcMhVK/VJr9evnaln+uLwfXbxs2qXg5Sk=";
     };
     postInstall = ''
       mkdir -p $out/bin

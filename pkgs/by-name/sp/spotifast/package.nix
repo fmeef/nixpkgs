@@ -13,6 +13,7 @@
   rcodesign,
   alsa-lib,
   libpulseaudio,
+  pipewire,
   libGL,
   libx11,
   libxkbcommon,
@@ -37,7 +38,7 @@ let
 in
 rustPlatform.buildRustPackage rec {
   pname = "spotifast";
-  version = "0.11.2";
+  version = "0.14.1";
 
   __structuredAttrs = true;
 
@@ -45,10 +46,10 @@ rustPlatform.buildRustPackage rec {
     owner = "crmne";
     repo = "spotifast";
     tag = "v${version}";
-    hash = "sha256-4hseXK3dvXL6fBNDuQ2sq8wrtpRqSRZPErgCixPdt50=";
+    hash = "sha256-RYeHaD3c5UfkF3f7dsfMlyKNL4u2CPBO2Zxq0bUg5x0=";
   };
 
-  cargoHash = "sha256-giJlt4MNb0/zWV8Y319HYtZc+q/ADRBxbodt/2MKu/0=";
+  cargoHash = "sha256-olyivbujtAcdAoJwBPIeW7OxpRABH11Fc0aqHtezz4I=";
 
   # projectm-sys only searches lib, while CMake may otherwise install to lib64.
   postPatch = ''
@@ -80,6 +81,7 @@ rustPlatform.buildRustPackage rec {
     lib.optionals stdenv.hostPlatform.isLinux [
       alsa-lib
       libpulseaudio
+      pipewire
       libGL
       libx11
     ]
@@ -87,8 +89,6 @@ rustPlatform.buildRustPackage rec {
 
   postFixup =
     lib.optionalString stdenv.hostPlatform.isLinux ''
-      wrapProgram $out/bin/fastpotify \
-        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibraries}
       wrapProgram $out/bin/spotifast \
         --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath runtimeLibraries}
     ''
