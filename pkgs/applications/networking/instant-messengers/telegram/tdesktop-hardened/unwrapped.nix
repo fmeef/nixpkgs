@@ -30,7 +30,6 @@
   ada,
   pango,
   tlottie,
-  cmark-gfm,
   libfido2,
   libavif,
   libheif,
@@ -38,6 +37,7 @@
   libicns,
   wallet-engine,
   apple-sdk_15,
+  swift,
   nix-update-script,
 }:
 
@@ -48,27 +48,16 @@
 # - https://git.alpinelinux.org/aports/tree/testing/tdesktop-hardened/APKBUILD
 # - https://github.com/void-linux/void-packages/blob/master/srcpkgs/tdesktop-hardened/template
 
-let
-  needsPangoTlottie = [
-    "64gram-unwrapped"
-    "ayugram-desktop-unwrapped"
-    "kotatogram-desktop-unwrapped"
-    "tdesktop-hardened-unwrapped"
-  ];
-  needsWalletEngine = [
-    "tdesktop-hardened-unwrapped"
-  ];
-in
 stdenv.mkDerivation (finalAttrs: {
   pname = "tdesktop-hardened-unwrapped";
-  version = "0.0.20";
+  version = "0.0.21";
 
   src = fetchFromGitHub {
     owner = "fmeef";
     repo = "tdesktop-hardened";
     rev = "v${finalAttrs.version}";
     fetchSubmodules = true;
-    hash = "sha256-lRIxpIFHQygL254WUJT78KuuLAgdJtf6DvsolySa/Zo=";
+    hash = "sha256-+6HudzXPZdCYA8u6fw9mhVkyMD3BNseOh57j0kCHRWA=";
   };
 
   nativeBuildInputs = [
@@ -80,6 +69,9 @@ stdenv.mkDerivation (finalAttrs: {
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     gobject-introspection
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    swift
   ];
 
   buildInputs = [
@@ -97,24 +89,17 @@ stdenv.mkDerivation (finalAttrs: {
     microsoft-gsl
     boost
     ada
-    cmark-gfm
     libfido2
     (tdlib.override { tde2eOnly = true; })
+    tlottie
+    wallet-engine
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [
     protobuf
     qtwayland
     kcoreaddons
     hunspell
-  ]
-  ++ lib.optionals (lib.elem finalAttrs.pname needsPangoTlottie && stdenv.hostPlatform.isLinux) [
     pango
-  ]
-  ++ lib.optionals (lib.elem finalAttrs.pname needsPangoTlottie) [
-    tlottie
-  ]
-  ++ lib.optionals (lib.elem finalAttrs.pname needsWalletEngine) [
-    wallet-engine
   ]
   ++ lib.optionals stdenv.hostPlatform.isDarwin [
     apple-sdk_15
@@ -130,8 +115,9 @@ stdenv.mkDerivation (finalAttrs: {
     # We're allowed to used the API ID of the Snap package:
     (lib.cmakeFeature "TDESKTOP_API_ID" "611335")
     (lib.cmakeFeature "TDESKTOP_API_HASH" "d524b414d21f4d37f08684c1df41ac9c")
-    # swift 6 is not available in nixpkgs
-    (lib.cmakeBool "DESKTOP_APP_DISABLE_SWIFT6" true)
+  ]
+  ++ lib.optionals stdenv.hostPlatform.isDarwin [
+    (lib.cmakeFeature "CMAKE_Swift_COMPILER_TARGET" stdenv.hostPlatform.swift.triple)
   ];
 
   installPhase = lib.optionalString stdenv.hostPlatform.isDarwin ''
