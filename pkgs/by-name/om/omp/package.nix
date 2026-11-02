@@ -32,7 +32,7 @@ let
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "omp";
-  version = "18.12.3";
+  version = "18.15.0";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -41,12 +41,12 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "can1357";
     repo = "oh-my-pi";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-S+mv25RJBqaVgm0g+visvnHHTwNqZcCoXryTCstt220=";
+    hash = "sha256-jDs0qxdslo7ocLAXkqS0FRxNn/puBzT62YIppDqakL0=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit (finalAttrs) src;
-    hash = "sha256-i8Y3odnituHbm24eI5WkmHXXt7fpIM7MI97e4hGH3hg=";
+    hash = "sha256-svleAt4fQP7JOSq1XuGkK2WyFZTDcNFNX7A/TygCniM=";
   };
 
   postPatch = ''
@@ -91,7 +91,7 @@ stdenv.mkDerivation (finalAttrs: {
     # Prevents breaking symlinks in node_modules
     dontFixup = true;
 
-    outputHash = "sha256-t5eagYY2sg+Yf2fBadrd72+lkrF06aaoTRfvzkZHGjM=";
+    outputHash = "sha256-u8qDMkrSWO/OGLmQhqq9Cf/vQCYWGxTIU7y4VMFxTIU=";
     outputHashMode = "recursive";
   };
 
@@ -227,11 +227,7 @@ stdenv.mkDerivation (finalAttrs: {
     changelog = "https://github.com/can1357/oh-my-pi/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.mit;
     mainProgram = "omp";
-    maintainers = with lib.maintainers; [
-      malix
-      naxdy
-      adamcstephens
-    ];
+    maintainers = with lib.maintainers; [ adamcstephens ];
     platforms = [
       "aarch64-darwin"
       "aarch64-linux"

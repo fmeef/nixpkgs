@@ -282,6 +282,7 @@ in
   amd-sev = runTest ./amd-sev.nix;
   amuled = runTest ./amuled.nix;
   android-translation-layer = runTest ./android-translation-layer.nix;
+  angie = import ./angie.nix { inherit lib runTest; };
   angie-api = runTest ./angie-api.nix;
   angrr = runTest ./angrr.nix;
   anki-sync-server = runTest ./anki-sync-server.nix;
@@ -302,6 +303,7 @@ in
   atticd = runTest ./atticd.nix;
   attr = pkgs.callPackage ./attr.nix { };
   atuin = runTest ./atuin.nix;
+  atuin-default-settings = runTest ./atuin-default-settings.nix;
   atuin-programs = runTest ./atuin-programs.nix;
   audiobookshelf = runTest ./audiobookshelf.nix;
   audit = runTest ./audit.nix;
@@ -772,6 +774,7 @@ in
   gocd-server = runTest ./gocd-server.nix;
   gocron = runTest ./gocron.nix;
   gocryptfs = runTest ./gocryptfs.nix;
+  goeland = runTest ./goeland.nix;
   gokapi = runTest ./gokapi.nix;
   gollum = runTest ./gollum.nix;
   gonic = runTest ./gonic.nix;
@@ -1243,29 +1246,7 @@ in
   nfs3 = handleTest ./nfs { version = 3; };
   nfs4 = handleTest ./nfs { version = 4; };
   nghttpx = runTest ./nghttpx.nix;
-  nginx = runTest ./nginx.nix;
-  nginx-auth = runTest ./nginx-auth.nix;
-  nginx-compression = runTest ./nginx-compression.nix;
-  nginx-dynamic-modules = runTest ./nginx-dynamic-modules.nix;
-  nginx-etag = runTest ./nginx-etag.nix;
-  nginx-etag-compression = runTest ./nginx-etag-compression.nix;
-  nginx-globalredirect = runTest ./nginx-globalredirect.nix;
-  nginx-grpc-error-pages = runTest ./nginx-grpc-error-pages.nix;
-  nginx-http3 = import ./nginx-http3.nix { inherit pkgs runTest; };
-  nginx-lua = runTest ./nginx-lua.nix;
-  nginx-mime = runTest ./nginx-mime.nix;
-  nginx-modsecurity = runTest ./nginx-modsecurity.nix;
-  nginx-moreheaders = runTest ./nginx-moreheaders.nix;
-  nginx-njs = runTest ./nginx-njs.nix;
-  nginx-otel = runTest ./nginx-otel.nix;
-  nginx-proxyprotocol = runTest ./nginx-proxyprotocol/default.nix;
-  nginx-pubhtml = runTest ./nginx-pubhtml.nix;
-  nginx-redirectcode = runTest ./nginx-redirectcode.nix;
-  nginx-sso = runTest ./nginx-sso.nix;
-  nginx-status-page = runTest ./nginx-status-page.nix;
-  nginx-tmpdir = runTest ./nginx-tmpdir.nix;
-  nginx-unix-socket = runTest ./nginx-unix-socket.nix;
-  nginx-variants = import ./nginx-variants.nix { inherit runTest; };
+  nginx = import ./nginx { inherit lib runTest; };
   nifi = runTestOn [ "x86_64-linux" ] ./web-apps/nifi.nix;
   nimdow = runTest ./nimdow.nix;
   nipap = runTest ./web-apps/nipap.nix;
@@ -1395,6 +1376,7 @@ in
     _module.args.name = "opencloud-production";
   };
   openldap = runTest ./openldap.nix;
+  openresty = import ./openresty.nix { inherit lib runTest; };
   openresty-lua = runTest ./openresty-lua.nix;
   opensearch = discoverTests (import ./opensearch.nix);
   opensearch-dashboards = handleTest ./opensearch-dashboards.nix { };
@@ -1506,6 +1488,7 @@ in
   plotinus = runTest ./plotinus.nix;
   pocket-id = runTest ./pocket-id.nix;
   podman = handleTestOn [ "aarch64-linux" "x86_64-linux" ] ./podman/default.nix { };
+  podman-dns = runTest ./podman/dns.nix;
   podman-tls-ghostunnel = handleTestOn [
     "aarch64-linux"
     "x86_64-linux"
@@ -1745,6 +1728,7 @@ in
   stash = handleTestOn [ "x86_64-linux" "aarch64-linux" ] ./stash.nix { };
   static-web-server = runTest ./web-servers/static-web-server.nix;
   step-ca = handleTestOn [ "x86_64-linux" ] ./step-ca.nix { };
+  steve = runTest ./steve;
   stirling-pdf = runTest ./stirling-pdf.nix;
   stirling-pdf-desktop = runTest ./stirling-pdf-desktop.nix;
   stratis = handleTest ./stratis { };
@@ -1857,7 +1841,6 @@ in
   systemd-networkd-vrf = runTest ./systemd-networkd-vrf.nix;
   systemd-no-tainted = runTest ./systemd-no-tainted.nix;
   systemd-nspawn = runTest ./systemd-nspawn.nix;
-  systemd-nspawn-configfile = runTest ./systemd-nspawn-configfile.nix;
   systemd-nsresourced-mountfsd = runTest ./systemd-nsresourced-mountfsd.nix;
   systemd-oomd = runTest ./systemd-oomd.nix;
   systemd-portabled = runTest ./systemd-portabled.nix;
@@ -1916,6 +1899,7 @@ in
   tmate-ssh-server = runTest ./tmate-ssh-server.nix;
   tomcat = runTest ./tomcat.nix;
   tor = runTest ./tor.nix;
+  toxvpn = runTest ./toxvpn.nix;
   tpm-ek = handleTest ./tpm-ek { };
   tpm2 = import ./tpm2 { inherit runTest; };
   traccar = runTest ./traccar.nix;
@@ -2072,6 +2056,7 @@ in
     inherit lib runTest;
   };
   yggdrasil = runTest ./yggdrasil.nix;
+  yopass = import ./web-apps/yopass.nix { inherit pkgs runTest; };
   your_spotify = runTest ./your_spotify.nix;
   zammad = runTest ./zammad.nix;
   zapret2 = runTest ./zapret2.nix;

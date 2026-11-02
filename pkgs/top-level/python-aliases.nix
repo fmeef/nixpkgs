@@ -290,6 +290,8 @@ mapAliases {
   flufl_i18n = throw "'flufl_i18n' has been renamed to/replaced by 'flufl-i18n'"; # Converted to throw 2025-10-29
   flufl_lock = throw "'flufl_lock' has been renamed to/replaced by 'flufl-lock'"; # Converted to throw 2025-10-29
   FormEncode = throw "'FormEncode' has been renamed to/replaced by 'formencode'"; # Converted to throw 2025-10-29
+  freud = freud-analysis; # Added 2026-10-26
+  fuse = throw "'fuse-python' was removed, because it is stuck on the old, unmaintained fuse 2.x"; # Added 2026-05-30
   fvs = throw "'fvs' has been removed due to being unused"; # Added 2026-05-23
   garminconnect-ha = throw "'garminconnect-ha' has been renamed to/replaced by 'garminconnect'"; # Converted to throw 2025-10-29
   GeoIP = throw "'GeoIP' has been renamed to/replaced by 'geoip'"; # Converted to throw 2025-10-29
@@ -387,6 +389,7 @@ mapAliases {
   libbs = throw "'libbs' has been replaced by 'declib', which uses a different Python module name"; # Added 2026-08-20
   libclang = clang; # added 2026-06-18
   libgpiod = gpiod; # added 2026-03-30
+  libparse-python = lib.warnOnInstantiate "'libparse-python' has been renamed to 'lln-libparse'" lln-libparse; # Added 2026-11-01
   libpyfoscam = throw "libpyfoscam was removed because Home Assistant switched to libpyfoscamcgi"; # added 2025-07-03
   libvirt = libvirt-python; # added 2026-07-20
   line_profiler = throw "'line_profiler' has been renamed to/replaced by 'line-profiler'"; # Converted to throw 2025-10-29
@@ -496,6 +499,7 @@ mapAliases {
   paramz = throw "'paramz' has been removed as it is incompatible with Numpy 2"; # added 2025-11-10
   paranoid-crypto = throw "'paranoid-crypto' has been removed because Google archived the unmaintained project."; # Added 2026-09-02
   parselmouth = praat-parselmouth; # added 2026-07-26
+  parsnip = parsnip-cif; # Added 2026-10-26
   password-entropy = warnAlias "'password-entropy' has been renamed to 'data-password-entropy'" data-password-entropy; # Added 2026-07-26
   PasteDeploy = throw "'PasteDeploy' has been renamed to/replaced by 'pastedeploy'"; # Converted to throw 2025-10-29
   patator = throw "'patator' has been removed as it was dependant on removed packages and broken"; # Added 2025-12-30
@@ -545,6 +549,7 @@ mapAliases {
   pycategories = throw "'pycategories' has been removed as it was broken and unmaintained"; # added 2025-11-08
   PyChromecast = throw "'PyChromecast' has been renamed to/replaced by 'pychromecast'"; # Converted to throw 2025-10-29
   pycrc = throw "'pycrc' has been removed because its source is unavailable"; # Added 2025-12-22
+  pycxx = cxx; # Added 2026-10-31
   pydns = throw "'pydns' has been renamed to/replaced by 'py3dns'"; # Converted to throw 2025-10-29
   pyechonest = throw "pyechonest was removed because it was broken and unmaintained"; # added 2025-08-26
   pyeiscp = throw "'pyeiscp' was removed because it was an unmaintained leaf package."; # added 2026-01-22
@@ -645,6 +650,7 @@ mapAliases {
   python-qt = throw "python-qt has been removed, because hard to maintain and not required by anything"; # Added 2025-01-14
   python-simple-hipchat = throw "'python-simple-hipchat' has been removed because it was broken and unmaintained"; # added 2025-08-26
   python-subunit = throw "'python-subunit' has been renamed to/replaced by 'subunit'"; # Converted to throw 2025-10-29
+  python-twitter = throw "'python-twitter' has been removed because it is archived upstream"; # Added 2026-11-01
   python-u2flib-server = throw "'python-u2flib-server' has been removed, since it was broken and archived upstream"; # added 2025-11-08
   python-unrar = unrar; # Added 2026-08-25
   python-unshare = throw "python-unshare was removed as unmaintained since 2016"; # added 2025-05-25
@@ -766,6 +772,7 @@ mapAliases {
   synologydsm-api = throw "'synologydsm-api' has been renamed to/replaced by 'py-synologydsm-api'"; # Converted to throw 2025-10-29
   syrupy_6 = syrupy; # added 2026-10-16
   systembridge = throw "systembridge has been removed because it is unmaintained upstream"; # Added 2025-11-23
+  systembridgemodels = throw "'systembridgemodels' has been removed because 'systembridgeconnector' no longer depends on it"; # added 2026-10-27
   systemd = throw "systemd was removed because it was misnamed; use systemd-python instead"; # added 2025-11-09
   sysv_ipc = throw "'sysv_ipc' has been renamed to/replaced by 'sysv-ipc'"; # Converted to throw 2025-10-29
   tago = throw "'tago' has been removed because it was deprecated for tagoio-sdk"; # Added 2026-08-06
@@ -839,6 +846,7 @@ mapAliases {
   xcaplib = warnAlias "'xcaplib' has been renamed to/replaced by 'python3-xcaplib'" python3-xcaplib; # added 2026-10-21
   xlib = python-xlib; # added 2026-06-21
   XlsxWriter = throw "'XlsxWriter' has been renamed to/replaced by 'xlsxwriter'"; # Converted to throw 2025-10-29
+  xnatpy = xnat; # added 2026-11-01
   y-py = throw "'y-py' has been removed as it was archived upstream; consider using 'pycrdt' instead"; # Added 2026-01-21
   Yapsy = throw "'Yapsy' has been renamed to/replaced by 'yapsy'"; # Converted to throw 2025-10-29
   yasi = throw "'yasi' has been removed as it is unmaintained upstream"; # Added 2026-01-31

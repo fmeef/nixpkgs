@@ -6,6 +6,7 @@
   alsa-lib,
   oniguruma,
   cacert,
+  coreutils,
   gitMinimal,
 
   version,
@@ -19,7 +20,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   sourceRoot = "${finalAttrs.src.name}/vibe/cli-rust";
 
-  cargoHash = "sha256-hOlWJ4cXgUuY9zP6EhBrtV7H+babY8g/Pxmxe893DuY=";
+  cargoHash = "sha256-FHAB/HXKgLOPvziyeF8huVLfZ3Jze48+10RkqHt2c/o=";
 
   nativeBuildInputs = [
     pkg-config
@@ -37,6 +38,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
   ];
 
   env.RUSTONIG_SYSTEM_LIBONIG = true;
+
+  # Fake clipboard tools in the tests call `/bin/cat`, which is absent from the sandbox
+  postPatch = ''
+    substituteInPlace tests/isolated/clipboard_linux.rs \
+      --replace-fail \
+        "/bin/cat" \
+        "${lib.getExe' coreutils "cat"}"
+  '';
 
   nativeCheckInputs = [
     # reqwest (sentry) fails to build without CA certificates

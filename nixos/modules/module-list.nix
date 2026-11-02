@@ -137,7 +137,6 @@
   ./hardware/xpadneo.nix
   ./i18n/input-method/default.nix
   ./i18n/input-method/fcitx5.nix
-  ./i18n/input-method/hime.nix
   ./i18n/input-method/ibus.nix
   ./i18n/input-method/kime.nix
   ./i18n/input-method/nabi.nix
@@ -211,10 +210,10 @@
   ./programs/droidcam.nix
   ./programs/dublin-traceroute.nix
   ./programs/dux-calendar.nix
+  ./programs/dux-files.nix
   ./programs/dux-search.nix
   ./programs/ente-auth.nix
   ./programs/environment.nix
-  ./programs/envision.nix
   ./programs/ergohaven-entropy.nix
   ./programs/evince.nix
   ./programs/extra-container.nix
@@ -227,6 +226,7 @@
   ./programs/flashrom.nix
   ./programs/flexoptix-app.nix
   ./programs/foot
+  ./programs/framework-settings.nix
   ./programs/freetds.nix
   ./programs/fuse.nix
   ./programs/fzf.nix
@@ -362,6 +362,7 @@
   ./programs/vim.nix
   ./programs/virt-manager.nix
   ./programs/vivid.nix
+  ./programs/vlc.nix
   ./programs/vscode.nix
   ./programs/wavemon.nix
   ./programs/wayland/dux-shell.nix
@@ -369,6 +370,7 @@
   ./programs/wayland/gtklock.nix
   ./programs/wayland/hyprland.nix
   ./programs/wayland/hyprlock.nix
+  ./programs/wayland/ironbar.nix
   ./programs/wayland/kanshi.nix
   ./programs/wayland/labwc.nix
   ./programs/wayland/mango.nix
@@ -714,6 +716,7 @@
   ./services/hardware/hddfancontrol.nix
   ./services/hardware/illum.nix
   ./services/hardware/inputplumber.nix
+  ./services/hardware/intel-lpmd.nix
   ./services/hardware/interception-tools.nix
   ./services/hardware/iptsd.nix
   ./services/hardware/irqbalance.nix
@@ -1896,6 +1899,7 @@
   ./services/web-apps/windmill.nix
   ./services/web-apps/wordpress.nix
   ./services/web-apps/writefreely.nix
+  ./services/web-apps/yopass.nix
   ./services/web-apps/your_spotify.nix
   ./services/web-apps/youtrack.nix
   ./services/web-apps/zabbix.nix
