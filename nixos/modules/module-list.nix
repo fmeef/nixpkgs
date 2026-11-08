@@ -40,6 +40,7 @@
   ./config/users-groups.nix
   ./config/vte.nix
   ./config/xdg/autostart.nix
+  ./config/xdg/directories.nix
   ./config/xdg/icons.nix
   ./config/xdg/menus.nix
   ./config/xdg/mime.nix
@@ -306,6 +307,7 @@
   ./programs/oddjobd.nix
   ./programs/onlyoffice.nix
   ./programs/opengamepadui.nix
+  ./programs/openlogi.nix
   ./programs/openvpn3.nix
   ./programs/partition-manager.nix
   ./programs/passless.nix
@@ -1382,7 +1384,6 @@
   ./services/networking/ngircd.nix
   ./services/networking/nix-serve.nix
   ./services/networking/nix-store-gcs-proxy.nix
-  ./services/networking/nixops-dns.nix
   ./services/networking/nm-file-secret-agent.nix
   ./services/networking/nmtrust.nix
   ./services/networking/nncp.nix
@@ -1553,7 +1554,6 @@
   ./services/scheduling/gocron.nix
   ./services/scheduling/prefect.nix
   ./services/scheduling/scx-loader.nix
-  ./services/scheduling/scx.nix
   ./services/search/elasticsearch-curator.nix
   ./services/search/elasticsearch.nix
   ./services/search/hound.nix
@@ -1581,6 +1581,7 @@
   ./services/security/endlessh.nix
   ./services/security/esdm.nix
   ./services/security/fail2ban.nix
+  ./services/security/falco.nix
   ./services/security/fprintd.nix
   ./services/security/haveged.nix
   ./services/security/hockeypuck.nix
@@ -1749,6 +1750,7 @@
   ./services/web-apps/goupile.nix
   ./services/web-apps/grav.nix
   ./services/web-apps/greenlight.nix
+  ./services/web-apps/grimmory.nix
   ./services/web-apps/grist.nix
   ./services/web-apps/grocy.nix
   ./services/web-apps/guacamole-client.nix
