@@ -448,6 +448,7 @@ mapAliases {
   bloodhound = throw "'bloodhound's upstream is archived, and the package is running on Electron 11"; # Added 2025-09-08
   bloomeetunes = throw "bloomeetunes is unmaintained and has been removed"; # Added 2025-08-26
   blueberry = throw "'blueberry' has been removed as it is unmaintained upstream. Consider using blueman instead"; # Added 2026-03-09
+  bluemix-cli = throw "'bluemix-cli' has been removed because its download site no longer exists; use 'ibmcloud-cli' instead, and 'cloudfoundry-cli' for 'cf'."; # Added 2026-11-10
   bmap-tools = throw "'bmap-tools' has been renamed to/replaced by 'bmaptool'"; # Converted to throw 2025-10-27
   bob = throw "'bob' has been removed as it is unmaintained upstream and has vulnerable dependencies."; # Added 2025-12-29
   bodyclose = throw "'bodyclose' has been removed because it was broken for an entire release cycle."; # Added 2026-05-31
@@ -474,6 +475,7 @@ mapAliases {
   buildPlatform = warnAlias "'buildPlatform' has been renamed to/replaced by 'stdenv.buildPlatform'" stdenv.buildPlatform; # Converted to warning 2025-10-28
   buildXenPackage = throw "'buildXenPackage' has been removed as a custom Xen build can now be achieved by simply overriding 'xen'."; # Added 2025-05-12
   bullet-roboschool = throw "'bullet-roboschool' has been removed as its build was broken and it was deprecated with its last update in 2019."; # Added 2025-11-15
+  burn-central-cli = warnAlias "'burn-central-cli' has been renamed to 'tracel-cli'" tracel-cli; # Added 2026-11-04
   bwidget = throw "'bwidget' has been renamed to/replaced by 'tclPackages.bwidget'"; # Converted to throw 2025-10-27
   bzip2_1_1 = throw "'bzip2_1_1' has been removed as it was an unmaintained 2020 snapshot with no remaining users; use 'bzip2' instead"; # Added 2026-05-31
   bzrtp = throw "'bzrtp' has been moved to 'linphonePackages.bzrtp'"; # Added 2025-09-20
@@ -1070,6 +1072,7 @@ mapAliases {
   gjay = throw "'gjay' has been removed as it is unmaintained upstream"; # Added 2025-05-25
   gkrellm = throw "'gkrellm' has been removed as it depended on the deprecated GTK2 engine."; # Added 2026-07-30
   glabels = throw "'glabels' has been removed because it is no longer maintained. Consider using 'glabels-qt', which is an active fork."; # Added 2025-09-16
+  glas = throw "'glas' has been removed as it has been unmaintained for 2 years."; # Added 2026-11-11
   glaxnimate = kdePackages.glaxnimate; # Added 2025-09-17
   glew110 = warnAlias "'glew110' has been renamed to 'glew_1_10'" glew_1_10; # Added 2026-01-14
   glew-egl = throw "'glew-egl' has been renamed to/replaced by 'glew'"; # Converted to throw 2025-10-27
@@ -1449,6 +1452,8 @@ mapAliases {
   libdevil = throw "libdevil has been removed, as it was unmaintained in Nixpkgs and upstream since 2017"; # Added 2025-09-16
   libdevil-nox = throw "libdevil has been removed, as it was unmaintained in Nixpkgs and upstream since 2017"; # Added 2025-09-16
   libdisplay-info_0_2 = throw "`libdisplay-info_0_2` has been removed as it is was unused in Nixpkgs. Consider upgrading to `libdisplay-info_0_3` or `libdisplay-info` instead"; # Added 2026-08-04
+  libdvdnav_4_2_1 = throw "`libdvdnav_4_2_1` has been removed. Consider upgrading to `libdvdnav`"; # Added 2026-11-08
+  libdvdread_4_9_9 = throw "`libdvdread_4_9_9` has been removed. Consider upgrading to `libdvdread`"; # Added 2026-11-08
   libdwarf-lite = throw "`libdwarf-lite` has been replaced by `libdwarf` as it's mostly a mirror"; # Added 2025-06-16
   libdynd = throw "'libdynd' has been removed due to lack of maintenance"; # Added 2026-03-24
   libepc = throw "'libepc' has been removed as it was archived upstream and depended on libsoup 2.4"; # Added 2026-06-07
@@ -2170,6 +2175,7 @@ mapAliases {
   php82Extensions = throw "php82 is EOL"; # Added 2026-10-18
   php82Packages = throw "php82 is EOL"; # Added 2026-10-18
   pianotrans = throw "'pianotrans' has been removed because its dependency 'piano-transcription-inference' was unmaintained"; # Added 2026-08-13
+  picoclaw = throw "'picoclaw' has been removed, it is depending on unmaintained and insecure library 'olm'"; # Added 2026-11-09
   picom-next = throw "'picom-next' has been renamed to/replaced by 'picom'"; # Converted to throw 2025-10-27
   pidgin = throw "'pidgin' has been removed, as it relies on gtk2 libraries"; # Added 2026-10-24
   pidgin-carbons = throw "'pidgin-carbons' has been renamed to/replaced by 'pidginPackages.pidgin-carbons'"; # Converted to throw 2025-10-27
@@ -2235,11 +2241,14 @@ mapAliases {
   postgresql13JitPackages = throw "'postgresql13JitPackages' has been renamed to/replaced by 'postgresql13Packages'"; # Converted to throw 2025-10-27
   postgresql13Packages = throw "postgresql13Packages has been removed since it reached its EOL upstream"; # Added 2025-11-17
   postgresql14JitPackages = throw "'postgresql14JitPackages' has been renamed to/replaced by 'postgresql14Packages'"; # Converted to throw 2025-10-27
+  postgresql14Packages = throw "postgresql14Packages has been removed since postgresql_14 is EOL"; # Added 2026-11-11
   postgresql15JitPackages = throw "'postgresql15JitPackages' has been renamed to/replaced by 'postgresql15Packages'"; # Converted to throw 2025-10-27
   postgresql16JitPackages = throw "'postgresql16JitPackages' has been renamed to/replaced by 'postgresql16Packages'"; # Converted to throw 2025-10-27
   postgresql17JitPackages = throw "'postgresql17JitPackages' has been renamed to/replaced by 'postgresql17Packages'"; # Converted to throw 2025-10-27
   postgresql_13 = throw "postgresql_13 has been removed since it reached its EOL upstream"; # Added 2025-11-17
   postgresql_13_jit = throw "postgresql_13_jit has been removed since it reached its EOL upstream"; # Added 2025-11-17
+  postgresql_14 = throw "postgresql_14 has been removed since it reached its EOL upstream"; # Added 2026-11-11
+  postgresql_14_jit = throw "postgresql_14_jit has been removed since it reached its EOL upstream"; # Added 2026-11-11
   postgresqlJitPackages = throw "'postgresqlJitPackages' has been renamed to/replaced by 'postgresqlPackages'"; # Converted to throw 2025-10-27
   pot = throw "'pot' has been removed as it requires libsoup 2.4 which is EOL"; # Added 2025-10-09
   pothos = throw "'pothos' has been removed as it relies on pcre, and is unmaintained upstream"; # Added 2026-06-17
@@ -2401,6 +2410,7 @@ mapAliases {
   rke2_1_32 = throw "'rke2_1_32' has been removed from nixpkgs as it has reached end of life"; # Added 2026-04-04
   rke2_1_33 = throw "'rke2_1_33' has been removed from nixpkgs as it has reached end of life"; # Added 2026-09-02
   rl_json = throw "'rl_json' has been renamed to/replaced by 'tclPackages.rl_json'"; # Converted to throw 2025-10-27
+  rmfuse = throw "'rmfuse' has been removed from nixpkgs because it's not working with the upstream service anymore"; # Added 2026-11-08
   roam-research = throw "'roam-research' has been removed from nixpkgs due to lack of maintenance"; # Added 2026-08-14
   robo = throw "'robo' was removed due to lack of in-tree maintenance"; # Added 2026-10-18
   rockbox_utility = throw "'rockbox_utility' has been renamed to/replaced by 'rockbox-utility'"; # Converted to throw 2025-10-27
@@ -3026,6 +3036,7 @@ mapAliases {
   xmpp-bridge = throw "'xmpp-bridge' has been removed as it is unmaintained upstream."; # Added 2026-09-04
   xneur = throw "'xneur' has been removed as it is unmaintained and depends on pcre, which is deprecated"; # Added 2026-06-06
   xo = throw "Use 'dbtpl' instead of 'xo'"; # Added 2025-09-28
+  xonotic-data = xonotic.data; # Added 2026-11-12
   xonsh-unwrapped = throw "'xonsh-unwrapped' has been renamed to/replaced by 'python3Packages.xonsh'"; # Converted to throw 2025-10-27
   xorg = # Added 2026-01-29
     lib.mapAttrs
