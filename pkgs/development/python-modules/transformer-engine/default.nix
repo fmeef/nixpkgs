@@ -36,9 +36,13 @@
   nvdlfw-inspect,
   onnx,
   onnxscript,
+  # jax-only:
+  triton,
 
   # passthru
+  pytestCheckHook,
   transformer-engine,
+  writableTmpDirAsHomeHook,
 
   cudaSupport ? config.cudaSupport,
   cudaCapabilities ?
@@ -48,7 +52,8 @@
   withJax ? true,
   withNvshmem ? false,
   withCusolvermp ? false,
-  withNcclEp ? true,
+  # NCCL EP requires Hopper (9.0) or newer.
+  withNcclEp ? lib.any (lib.flip lib.versionAtLeast "9.0") cudaCapabilities,
 }:
 
 let
@@ -59,10 +64,11 @@ let
     getInclude
     getLib
     optional
+    optionalAttrs
     optionalString
     optionals
     strings
-    subtractLists
+    unique
     ;
   inherit (cudaPackages) backendStdenv flags;
 
@@ -72,23 +78,29 @@ let
     else
       "none";
 
-  cudaCapabilities' = subtractLists [
-    # Compilation will fail when providing those architectures:
-    #   error: static assertion failed with "Compiled for the generic architecture, while utilizing
-    #   family-specific features.
-    #   Please compile for smXXXf architecture instead of smXXX architecture."
-    # Providing 10.0 and 12.0 respectively is enough as the CMake file will automatically add the
-    # correct compilation flags for supporting those architectures.
-    "10.3"
-    "12.1"
-  ] cudaCapabilities;
+  # Compilation will fail when providing architectures which are members of a family other than its head:
+  #   error: static assertion failed with "Compiled for the generic architecture, while utilizing
+  #   family-specific features.
+  #   Please compile for smXXXf architecture instead of smXXX architecture."
+  # Providing the head of the family (10.0 or 12.0) is enough, as the CMake file automatically adds the family- and
+  # architecture-specific targets (100a, 103a, 107a, and 120f) which support them.
+  cudaCapabilities' = unique (
+    map (
+      cudaCapability:
+      {
+        "10.3" = "10.0";
+        "10.7" = "10.0";
+        "12.1" = "12.0";
+      }
+      .${cudaCapability} or cudaCapability
+    ) cudaCapabilities
+  );
 
 in
 buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
   pname = "transformer-engine";
-  version = "2.19";
+  version = "2.21.0";
   pyproject = true;
-  __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "NVIDIA";
@@ -96,7 +108,7 @@ buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
     tag = "v${finalAttrs.version}";
     # Their CMakeLists.txt does not easily let us inject dependencies
     fetchSubmodules = true;
-    hash = "sha256-CPGw1gHTW/nA8V2aZ5YOqgnAMostlbnvlOHA5uno0HM=";
+    hash = "sha256-vncBah8PBZGxnVI5XcWTHFZiHQHaQ1Sjo1ZI+9di4kk=";
   };
 
   patches = optionals cudaSupport [
@@ -214,7 +226,7 @@ buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
     cudaPackages.cuda_nvcc # crt/host_config.h; even though we include this in nativeBuildInputs, it's needed here too
     cudaPackages.cuda_nvml_dev # nvml.h
     cudaPackages.cuda_nvrtc # nvrtc.h
-    cudaPackages.cuda_nvtx # nvToolsExt.h
+    cudaPackages.nvtx # nvToolsExt.h
     cudaPackages.cuda_profiler_api # cuda_profiler_api.h
     cudaPackages.cudnn # cudnn.h
     cudaPackages.libcublas
@@ -250,6 +262,7 @@ buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
   ++ optionals withJax [
     flax
     jax
+    triton
   ]
   ++ optionals withPytorch [
     einops
@@ -274,7 +287,12 @@ buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
     # libtransformer_engine.so gets a `DT_NEEDED` on libcuda.so.1, provided by the GPU driver at
     # run time:
     # OSError: libcuda.so.1: cannot open shared object file: No such file or directory
-    || withNcclEp;
+    || withNcclEp
+
+    # libtransformer_engine.so links against libcudnn_engines_runtime_compiled.so, which has a `DT_NEEDED` on
+    # libcuda.so.1 since cuDNN 9.27:
+    # OSError: libcuda.so.1: cannot open shared object file: No such file or directory
+    || lib.versionAtLeast cudaPackages.cudnn.version "9.27";
 
   pythonImportsCheck = [
     "transformer_engine"
@@ -289,13 +307,75 @@ buildPythonPackage.override { stdenv = backendStdenv; } (finalAttrs: {
   # Almost all tests require GPU access
   doCheck = false;
 
-  passthru.tests = {
-    withOutNcclEp = transformer-engine.override { withNcclEp = false; };
-    withMpi = transformer-engine.override { withMpi = true; };
-    withPytorch = transformer-engine.override { withPytorch = true; };
-    withJax = transformer-engine.override { withJax = true; };
-    withNvshmem = transformer-engine.override { withNvshmem = true; };
-    withCusolvermp = transformer-engine.override { withCusolvermp = true; };
+  passthru = {
+    tests = {
+      withOutNcclEp = transformer-engine.override { withNcclEp = false; };
+      withMpi = transformer-engine.override { withMpi = true; };
+      withPytorch = transformer-engine.override { withPytorch = true; };
+      withJax = transformer-engine.override { withJax = true; };
+      withNvshmem = transformer-engine.override { withNvshmem = true; };
+      withCusolvermp = transformer-engine.override { withCusolvermp = true; };
+    };
+  }
+  // optionalAttrs withPytorch {
+    # Runs some of upstream's PyTorch tests against this build, without rebuilding it:
+    # - fused attention, checked against the unfused implementation;
+    # - fused attention captured in a CUDA graph, and the cache of cuDNN graphs fused attention uses;
+    # - torch.compile.
+    # Without FusedAttention those tests would skip or run on another backend instead of failing, so
+    # the check first requires it on GPUs that support it (compute capability 8.0 and newer).
+    # A crash at process exit also fails the check.
+    gpuCheck = backendStdenv.mkDerivation {
+      pname = "${finalAttrs.pname}-gpu-check";
+      inherit (finalAttrs) version src;
+
+      requiredSystemFeatures = [ "cuda" ];
+
+      nativeBuildInputs = [ (python.withPackages (_: [ finalAttrs.finalPackage ])) ];
+
+      dontConfigure = true;
+      dontBuild = true;
+
+      installPhase = ''
+        touch "$out"
+      '';
+
+      doInstallCheck = true;
+      nativeInstallCheckInputs = [
+        pytestCheckHook
+        writableTmpDirAsHomeHook
+      ];
+
+      # pytestCheckHook runs preCheck, not preInstallCheck.
+      # From the source root, `python -m pytest` would import the source's `transformer_engine`
+      # instead of the installed one.
+      preCheck = ''
+        cd tests/pytorch
+      ''
+      # Fail, rather than skip, when FusedAttention is unavailable on a GPU that supports it
+      + ''
+        ${python.interpreter} - <<'EOF'
+        import torch
+        from utils import ModelConfig, get_available_attention_backends
+
+        if torch.cuda.get_device_capability() >= (8, 0):
+            (_, fused, _), _, fused_backends = get_available_attention_backends(
+                ModelConfig(2, 512, 8, 64), qkv_dtype=torch.bfloat16, qkv_layout="bshd_bshd_bshd"
+            )
+            assert fused and fused_backends, "FusedAttention is unavailable for a BF16 config it supports on sm80+"
+        EOF
+      '';
+
+      enabledTestPaths = [
+        "test_cuda_graphs.py::test_make_graphed_callables_with_dot_product_attention"
+        "test_torch_compile.py"
+        # test_dot_product_attention leaves NVTE_{FLASH,FUSED,UNFUSED}_ATTN set for the last backend
+        # it ran, which test_cuda_graphs.py would otherwise run with, so it comes last. Upstream runs
+        # each test file in its own pytest process.
+        "attention/test_attention.py::test_fused_attn_graph_cache"
+        "attention/test_attention.py::test_dot_product_attention"
+      ];
+    };
   };
 
   meta = {

@@ -37,6 +37,8 @@ buildPythonPackage (finalAttrs: {
     rich-argparse
   ];
 
+  __darwinAllowLocalNetworking = true;
+
   doCheck = true;
 
   nativeCheckInputs = [
@@ -58,6 +60,11 @@ buildPythonPackage (finalAttrs: {
   ];
 
   pythonImportsCheck = [ "cmd2" ];
+
+  passthru = {
+    # bulk updater uses wrong tag
+    skipBulkUpdate = true;
+  };
 
   meta = {
     description = "Enhancements for standard library's cmd module";

@@ -10,17 +10,19 @@
   webkitgtk_4_1,
   makeDesktopItem,
   writeText,
+  zstd,
+  pkg-config,
 }:
 
 let
   pname = "mangayomi";
-  version = "0.9.2";
+  version = "0.9.9";
 
   src = fetchFromGitHub {
     owner = "kodjodevf";
     repo = "mangayomi";
     tag = "v${version}";
-    hash = "sha256-7geEJynXq2OcCLhTtm8KxvfuCagI5grCUUQ0K7jFkcY=";
+    hash = "sha256-J3YPn6Q8GM6Tc+OrYbJIR8u1H8vGLwrYiK0g0LZinnw=";
   };
 
   metaCommon = {
@@ -28,7 +30,7 @@ let
     description = "Reading manga, novels, and watching animes";
     homepage = "https://github.com/kodjodevf/mangayomi";
     license = lib.licenses.asl20;
-    maintainers = [ ];
+    maintainers = with lib.maintainers; [ yvnth ];
     platforms = lib.platforms.linux;
   };
 
@@ -40,6 +42,10 @@ let
     cargoHash = "sha256-q/jlamNxHrBe4z+MIpNr4T4HJgPsJMh0x18bXr4HKtU=";
 
     passthru.libraryPath = "lib/librust_lib_mangayomi.so";
+
+    buildInputs = [ zstd ];
+
+    nativeBuildInputs = [ pkg-config ];
 
     meta = metaCommon;
   };

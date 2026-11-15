@@ -14,6 +14,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   pname = "nix-weather";
   version = "0.0.4";
 
+  __structuredAttrs = true;
+
   # fetch from GitHub and not upstream forgejo because cafkafk doesn't want to
   # pay for bandwidth
   src = fetchFromGitHub {
@@ -24,7 +26,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   };
 
   cargoHash = "sha256-IkwCa+MioL2F3fiUYm3HQOeO2yb+58YQzM9YJ2oILj4=";
-  cargoExtraArgs = "-p nix-weather";
 
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [
@@ -67,8 +68,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
       Heavily inspired by guix weather.
     '';
-    homepage = "https://git.fem.gg/cafkafk/nix-weather";
-    changelog = "https://git.fem.gg/cafkafk/nix-weather/releases/tag/v${finalAttrs.version}";
+    homepage = "https://github.com/cafkafk/nix-weather";
+    changelog = "https://github.com/cafkafk/nix-weather/releases/tag/v${finalAttrs.version}";
     license = lib.licenses.eupl12;
     mainProgram = "nix-weather";
     maintainers = with lib.maintainers; [

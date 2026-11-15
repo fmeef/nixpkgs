@@ -3,6 +3,7 @@
   fetchurl,
   lib,
   makeWrapper,
+  nixosTests,
   patchelf,
   stdenvNoCC,
   testers,
@@ -55,7 +56,7 @@
   commandLineArgs ? "",
 
   # Will crash without.
-  systemd,
+  systemdLibs,
 
   # Loaded at runtime.
   libexif,
@@ -159,7 +160,7 @@ let
     pipewire
     snappy
     speechd-minimal
-    systemd
+    systemdLibs
     util-linux
     vulkan-loader
     wayland
@@ -180,7 +181,7 @@ let
 
   linux = stdenvNoCC.mkDerivation (finalAttrs: {
     inherit pname meta;
-    version = "153.0.8010.52";
+    version = "157.0.8103.78";
 
     src =
       let
@@ -195,8 +196,8 @@ let
         url = "https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${finalAttrs.version}-1_${debArch}.deb";
         hash =
           {
-            amd64 = "sha256-KeDkta8BITkV/9t/TkmhGVbcX8WRFlyFr4aI3N/5B6w=";
-            arm64 = "sha256-5aHWRq9ZRWiUHjph57jt3Gk/dpt/Fmh0xx9yycuAYWU=";
+            amd64 = "sha256-TXQGNrXJb2h3mGAsWq1qWicPRN0C5I2wY4rneqSGexs=";
+            arm64 = "sha256-a+CPtilocDmsfOlm8nwsWi39HcFwe1SbNS3jNbPobdI=";
           }
           .${debArch};
       };
@@ -300,17 +301,20 @@ let
 
     passthru = {
       updateScript = ./update.sh;
-      tests.version = testers.testVersion { package = finalAttrs.finalPackage; };
+      tests = {
+        nixos = nixosTests.google-chrome;
+        version = testers.testVersion { package = finalAttrs.finalPackage; };
+      };
     };
   });
 
   darwin = stdenvNoCC.mkDerivation (finalAttrs: {
     inherit pname meta;
-    version = "153.0.8010.53";
+    version = "157.0.8103.79";
 
     src = fetchurl {
-      url = "https://dl.google.com/release2/chrome/advkfamzjrpin7rbc7pzjxz6wkuq_153.0.8010.53/GoogleChrome-153.0.8010.53.dmg";
-      hash = "sha256-Hi/sZoZ16hdmIdGlpbEQ7DmhmwqxblE9mzgkHLMgN2w=";
+      url = "https://dl.google.com/release2/chrome/adnzqttux77ny5bapr5n3fiap5cq_157.0.8103.79/GoogleChrome-157.0.8103.79.dmg";
+      hash = "sha256-7tFSLYya1ehrUedt8Br0UcfCSAzbDQCph5TlRvkkikY=";
     };
 
     dontPatch = true;

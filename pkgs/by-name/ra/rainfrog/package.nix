@@ -2,13 +2,16 @@
   lib,
   rustPlatform,
   fetchFromGitHub,
+  pkg-config,
+  libgit2,
+  sqlite,
   versionCheckHook,
   nix-update-script,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "rainfrog";
-  version = "0.4.5";
+  version = "0.4.7";
 
   __structuredAttrs = true;
 
@@ -16,10 +19,19 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "achristmascarl";
     repo = "rainfrog";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-kA3rIGmSid3qbIasqoSnFv4w0P+RrAWoH8PszY9xSGs=";
+    hash = "sha256-IYJIs9EBkIz8lSBeClSOGCOpxEthlzP3bQZsXjHm70k=";
   };
 
-  cargoHash = "sha256-A3gZF2oJVt5WR56JVwsPOVvgu/d9veD01+gQESNV0Qc=";
+  cargoHash = "sha256-/VFeLCC80ipTGuXcR0kihukCxtAt6ksLjnoZPwjy+w4=";
+
+  env.LIBGIT2_NO_VENDOR = 1;
+
+  nativeBuildInputs = [ pkg-config ];
+
+  buildInputs = [
+    libgit2
+    sqlite
+  ];
 
   nativeInstallCheckInputs = [ versionCheckHook ];
   doInstallCheck = true;

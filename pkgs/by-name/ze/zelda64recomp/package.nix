@@ -19,6 +19,7 @@
   n64recomp,
   directx-shader-compiler,
   forceX11 ? false,
+  fetchpatch,
 }:
 
 let
@@ -54,6 +55,25 @@ llvmPackages_19.stdenv.mkDerivation (finalAttrs: {
   };
 
   strictDeps = true;
+
+  patches = [
+    # Fix building with gcc16
+    (fetchpatch {
+      name = "rmlui-cstdint.patch";
+      url = "https://github.com/mikke89/RmlUi/commit/8c27b0a5cb601a3c57ecddc6ce8769ca93a97cb8.patch";
+      stripLen = 1;
+      extraPrefix = "lib/RmlUi/";
+      hash = "sha256-oIyPlnBsLcrGIbylT16i5SLttyXmzF5ZP1js/JDRG3o=";
+    })
+    # Required for N64Recomp commit 598ce20: Live recompiler support for PIC jump tables
+    (fetchpatch {
+      name = "n64modernruntime-pic.patch";
+      url = "https://github.com/N64Recomp/N64ModernRuntime/commit/e4342ae030a9d94aa97a81aafd3368ed7daa74df.patch";
+      relative = "librecomp";
+      extraPrefix = "lib/N64ModernRuntime/librecomp/";
+      hash = "sha256-pheuE+ABN9DZDeWDv5NFCoP+0dT8DGps6YKdsdTf0Os=";
+    })
+  ];
 
   nativeBuildInputs = [
     cmake

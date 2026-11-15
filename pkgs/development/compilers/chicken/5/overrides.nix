@@ -26,8 +26,29 @@ let
   addToCscOptions = opt: old: {
     env.CSC_OPTIONS = lib.concatStringsSep " " ([ old.env.CSC_OPTIONS or "" ] ++ lib.toList opt);
   };
+  # chicken-install installs every .egg it finds, so keep only the canonical <eggName>.egg.
+  removeBundledEggs = eggName: old: {
+    preBuild = (old.preBuild or "") + ''
+      for f in *.egg; do
+        [ -e "$f" ] || continue
+        [ "$f" = "${eggName}.egg" ] || rm "$f"
+      done
+    '';
+  };
 in
 {
+  # Upstream builds its components only for the host, for compiling against,
+  # which leaves it empty when cross-compiling, yet the eggs using it load it
+  # at run time, so it is built for the target, too.
+  bind =
+    old:
+    lib.optionalAttrs (!lib.systems.equals stdenv.hostPlatform stdenv.buildPlatform) {
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace bind.egg \
+          --replace-fail "(host" "" \
+          --replace-fail "(component-dependencies bind-translator)))))" "(component-dependencies bind-translator))))"
+      '';
+    };
   breadline = addToBuildInputs pkgs.readline;
   blas = addToBuildInputsWithPkgConfig pkgs.blas;
   blosc = addToBuildInputs pkgs.c-blosc;
@@ -40,7 +61,37 @@ in
       srfi-13
     ]) old);
   cmark = addToBuildInputs pkgs.cmark;
-  crypt = addToBuildInputs pkgs.libxcrypt;
+  crypt =
+    old:
+    (addToBuildInputs pkgs.libxcrypt old)
+    # When cross-compiling, the build script cannot run its probe of which hash
+    # types crypt() supports, so they are forced to those libxcrypt is built
+    # with, which the probe would find. The DES ones have no scheme id, so the
+    # egg always provides those.
+    // lib.optionalAttrs (!lib.systems.equals stdenv.hostPlatform stdenv.buildPlatform) {
+      env =
+        let
+          hashTypes = {
+            "2a" = "blowfish";
+            "6" = "sha512";
+            "5" = "sha256";
+            "1" = "md5";
+          };
+        in
+        old.env
+        // {
+          FORCE_CRYPT_HASHTYPES = toString (
+            map (id: hashTypes.${id}) (lib.filter (id: hashTypes ? ${id}) pkgs.libxcrypt.enabledCryptSchemeIds)
+          );
+        };
+      # The build script also compiles the import library for the build
+      # platform, which the compiler for the target cannot do; the one for the
+      # target is built separately anyway.
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace build-crypt.scm \
+          --replace-fail '(compile-file "crypt.import.scm" #:options `("-s" "-O2"))' ""
+      '';
+    };
   epoxy =
     old:
     (addToPropagatedBuildInputsWithPkgConfig pkgs.libepoxy old)
@@ -56,6 +107,7 @@ in
       ];
     };
   espeak = addToBuildInputsWithPkgConfig pkgs.espeak-ng;
+  http-curl = addToBuildInputsWithPkgConfig pkgs.curl;
   ephem = addToBuildInputs pkgs.libnova;
   exif = addToBuildInputsWithPkgConfig pkgs.libexif;
   expat =
@@ -114,17 +166,19 @@ in
   hypergiant = addPkgConfig;
   icu = addToBuildInputsWithPkgConfig pkgs.icu;
   imlib2 = addToBuildInputsWithPkgConfig pkgs.imlib2;
-  inotify =
-    old:
-    (addToBuildInputs (lib.optional stdenv.hostPlatform.isDarwin pkgs.libinotify-kqueue) old)
-    // lib.optionalAttrs stdenv.hostPlatform.isDarwin (addToCscOptions "-L -linotify" old);
+  # "Error: extension is not targeted for this system: \"inotify\""
+  inotify = brokenOnDarwin;
   leveldb = addToBuildInputs pkgs.leveldb;
   libyaml = old: {
     env.NIX_CFLAGS_COMPILE = "-Wno-error=format-security";
+    # The bindings pass pointers for the va_list arguments of libfyaml, which
+    # only works where va_list is one, unlike on ARM outside of Darwin.
+    meta = old.meta // {
+      broken = stdenv.hostPlatform.isAarch && !stdenv.hostPlatform.isDarwin;
+    };
   };
   lmdb-ht = addToBuildInputs pkgs.lmdb;
   magic = addToBuildInputs pkgs.file;
-  magic-pipes = addToBuildInputs pkgs.chickenPackages_5.chickenEggs.regex;
   # requires PCRE
   mdh = broken;
   # missing dependency in upstream egg
@@ -142,6 +196,7 @@ in
       '';
       env.NIX_CFLAGS_COMPILE = "-Wno-error=incompatible-pointer-types";
     };
+  nanograd = addToPropagatedBuildInputs (with chickenEggs; [ blas ]);
   nanomsg = addToBuildInputs pkgs.nanomsg;
   ncurses = addToBuildInputsWithPkgConfig [ pkgs.ncurses ];
   oauthtoothy =
@@ -157,6 +212,9 @@ in
     pkgs.ocl-icd
   ];
   openssl = addToBuildInputs pkgs.openssl;
+  orm-db-rqlite = removeBundledEggs "orm-db-rqlite";
+  orm-db-sqlite = removeBundledEggs "orm-db-sqlite";
+  orm = removeBundledEggs "orm";
   plot = addToBuildInputs pkgs.plotutils;
   postgresql = addToBuildInputsWithPkgConfig pkgs.libpq;
   pyffi = addToBuildInputsWithPkgConfig pkgs.python3;
@@ -219,7 +277,7 @@ in
   svn-client =
     old:
     (addToBuildInputs [ pkgs.subversion pkgs.aprutil ] old)
-    // (addToNativeBuildInputs pkgs.apr old)
+    // (addToNativeBuildInputs [ pkgs.apr pkgs.pkg-config ] old)
     // {
       postPatch =
         let
@@ -227,7 +285,9 @@ in
           aprUtilInclude = "${lib.getDev pkgs.aprutil}/include";
         in
         ''
-          substituteInPlace build-svn-client svn-client.setup \
+          substituteInPlace build-svn-client \
+            --replace-fail 'CFLAGS="$CFLAGS `pkg-config --cflags libsvn_client`"' 'CFLAGS="$CFLAGS `pkg-config --cflags libsvn_client` -I${svnInclude}"'
+          substituteInPlace svn-client.setup \
             --replace-fail '-I/usr/include/subversion-1' "-I${svnInclude}" \
             --replace-fail '-I/usr/local/include/subversion-1' "-I${aprUtilInclude} -I${svnInclude}"
         '';
@@ -337,6 +397,17 @@ in
         chickenEggs.foreigners
       ];
     };
+  # cond-expand has no chicken-5 clause any more
+  slib-wt-tree = broken;
+  srfi-137 = broken;
+  srfi-38 = broken;
+  # depends on srfi-38, which is broken
+  magic-pipes = broken;
+  srfi-48 = broken;
+  # imports scheme.base, which CHICKEN 5 does not provide
+  matchertext = broken;
+  # csc: file `lsp-server.private.chicken.import.scm' does not exist
+  lsp-server = broken;
   canvas-draw = broken;
   gemini = broken;
   gemini-client = broken;

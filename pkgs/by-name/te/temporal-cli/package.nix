@@ -11,16 +11,16 @@
 
 buildGoModule (finalAttrs: {
   pname = "temporal-cli";
-  version = "1.8.3";
+  version = "1.10.0";
 
   src = fetchFromGitHub {
     owner = "temporalio";
     repo = "cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-4+DvAUQC+iW+GuvTNBDvr9rJDQ0bXZvkO9XhZPYYQsw=";
+    hash = "sha256-o9sz85CZpAuKbXqp0IUG1t11eT9DSEWPKmPg7Rg4kAY=";
   };
 
-  vendorHash = "sha256-h2HSuVQTdLxatLObbNHCjP2qHNE9Qy/4U1MZ0G7HCNY=";
+  vendorHash = "sha256-yuPnRMuPSAzIQCaiStlz5aZRpymZCLowgcGbglhQ4JM=";
 
   __structuredAttrs = true;
 
@@ -36,8 +36,7 @@ buildGoModule (finalAttrs: {
     "-X github.com/temporalio/cli/internal/temporalcli.Version=${finalAttrs.version}"
   ];
 
-  # Tests fail with x86 on macOS Rosetta 2
-  doCheck = !(stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isx86_64);
+  doCheck = true;
 
   nativeCheckInputs = [ writableTmpDirAsHomeHook ];
 

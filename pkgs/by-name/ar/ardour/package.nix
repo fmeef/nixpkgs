@@ -2,7 +2,6 @@
   lib,
   stdenv,
   fetchgit,
-  fetchpatch,
   fetchzip,
   alsa-lib,
   apple-sdk,
@@ -21,7 +20,7 @@
   flac,
   fluidsynth,
   glibc,
-  glibmm,
+  glibmm_2_4,
   graphviz,
   harvid,
   hidapi,
@@ -36,7 +35,7 @@
   libpulseaudio,
   librdf_rasqal,
   libsamplerate,
-  libsigcxx,
+  libsigcxx_2_0,
   libsndfile,
   libusb1,
   libuv,
@@ -88,14 +87,14 @@ let
 
   generic = stdenv.mkDerivation (finalAttrs: {
     pname = "ardour";
-    version = "9.8";
+    version = "9.10";
 
     # We can't use `fetchFromGitea` here, as attempting to fetch release archives from git.ardour.org
     # result in an empty archive. See https://tracker.ardour.org/view.php?id=7328 for more info.
     src = fetchgit {
       url = "git://git.ardour.org/ardour/ardour.git";
       tag = finalAttrs.version;
-      hash = "sha256-h+JS3T2pr/VOtR9E2NMY4gd3IxL0leWATUV52u459iM=";
+      hash = "sha256-0325KN8TccXPP9OCyah60zHbsI8WrFNianOf8CvrcUU=";
     };
 
     patches = [
@@ -142,7 +141,7 @@ let
       fftwSinglePrec
       flac
       fluidsynth
-      glibmm
+      glibmm_2_4
       hidapi
       itstool
       kissfft
@@ -154,7 +153,7 @@ let
       libogg
       librdf_rasqal
       libsamplerate
-      libsigcxx
+      libsigcxx_2_0
       libsndfile
       libusb1
       libuv

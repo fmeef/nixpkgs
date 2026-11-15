@@ -67,6 +67,10 @@ stdenv.mkDerivation (finalAttrs: {
     substituteInPlace src/solvers/CMakeLists.txt \
      --replace-fail "@srccadical@" "$PWD/srccadical" \
      --replace-fail "@srcglucose@" "$PWD/srcglucose"
+
+    # libc++ 22 rejects the hardcoded macOS deployment target 10.15
+    substituteInPlace CMakeLists.txt \
+      --replace-fail "set(CMAKE_OSX_DEPLOYMENT_TARGET 10.15)" ""
   ''
   + lib.optionalString (!stdenv.cc.isGNU) ''
     # goto-gcc rely on gcc
@@ -94,6 +98,11 @@ stdenv.mkDerivation (finalAttrs: {
       # fix "first argument in call to 'memset' is a pointer to non-trivially copyable type"
       "-Wno-error=nontrivial-memcall"
     ]
+    ++ lib.optionals stdenv.cc.isGNU [
+      "-Wno-error=unused-but-set-variable"
+      "-Wno-error=sfinae-incomplete"
+      "-Wno-error=array-bounds"
+    ]
   );
 
   # TODO: add jbmc support
@@ -119,7 +128,10 @@ stdenv.mkDerivation (finalAttrs: {
     description = "Bounded Model Checker for C and C++ programs";
     homepage = "http://www.cprover.org/cbmc/";
     license = lib.licenses.bsdOriginal;
-    maintainers = with lib.maintainers; [ jiegec ];
+    maintainers = with lib.maintainers; [
+      jiegec
+      mkannwischer
+    ];
     platforms = lib.platforms.unix;
   };
 })

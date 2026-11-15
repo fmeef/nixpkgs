@@ -3,18 +3,19 @@
   fetchFromGitHub,
   git,
   python3,
+  writableTmpDirAsHomeHook,
 }:
 
 python3.pkgs.buildPythonApplication (finalAttrs: {
   pname = "troubadix";
-  version = "26.8.5";
+  version = "26.11.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "greenbone";
     repo = "troubadix";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-ZcHl8iHpORxn2BtmT2D9brjJ9yoNbSrP/HWNIWDNx0g=";
+    hash = "sha256-w05VRVNS4zLd0FyhknVUNKTtvy5ZNyVZ2+6p4pBQrtg=";
   };
 
   pythonRelaxDeps = [
@@ -39,11 +40,8 @@ python3.pkgs.buildPythonApplication (finalAttrs: {
   nativeCheckInputs = with python3.pkgs; [
     git
     pytestCheckHook
+    writableTmpDirAsHomeHook
   ];
-
-  preCheck = ''
-    export HOME=$(mktemp -d)
-  '';
 
   pythonImportsCheck = [ "troubadix" ];
 

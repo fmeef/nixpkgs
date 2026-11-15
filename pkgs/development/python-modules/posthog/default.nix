@@ -5,12 +5,13 @@
   buildPythonPackage,
   distro,
   django,
+  djangorestframework,
   fetchFromGitHub,
+  flask,
   freezegun,
   google-genai,
   mcp,
   mock,
-  monotonic,
   openai,
   opentelemetry-exporter-otlp,
   opentelemetry-sdk,
@@ -18,25 +19,23 @@
   pytest-asyncio,
   pytest-bdd,
   pytestCheckHook,
-  python-dateutil,
   pythonAtLeast,
   requests,
   setuptools,
-  six,
   typing-extensions,
   zstandard,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "posthog";
-  version = "7.52.0";
+  version = "7.71.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "PostHog";
     repo = "posthog-python";
     tag = "posthog-v${finalAttrs.version}";
-    hash = "sha256-EIH8CQgbnpbkMupyyxRR5+ZTiKiBBRtTyFQfbEABHV4=";
+    hash = "sha256-4sc1PZaN/SdUk/akzyHhuPejUEDYyXuHlBxIw2LYOaA=";
   };
 
   build-system = [ setuptools ];
@@ -44,16 +43,15 @@ buildPythonPackage (finalAttrs: {
   dependencies = [
     backoff
     distro
-    monotonic
-    python-dateutil
     requests
-    six
     typing-extensions
   ];
 
   nativeCheckInputs = [
     anthropic
     django
+    djangorestframework
+    flask
     freezegun
     google-genai
     mcp
@@ -75,12 +73,17 @@ buildPythonPackage (finalAttrs: {
     "test_excepthook"
     "test_request"
     "test_upload"
+    # AttributeError: 'CallToolResult' object has no attribute 'structuredContent'
+    # (field changed in mcp2)
+    "test_prepare_tool_result_delivers_into_call_tool_result_models"
   ];
+
+  __darwinAllowLocalNetworking = true; # for the transport tests
 
   meta = {
     description = "Module for interacting with PostHog";
     homepage = "https://github.com/PostHog/posthog-python";
-    changelog = "https://github.com/PostHog/posthog-python/blob/${finalAttrs.src.tag}/CHANGELOG.md";
+    changelog = "https://github.com/PostHog/posthog-python/blob/${finalAttrs.src.tag}/posthog/CHANGELOG.md";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [ happysalada ];
   };

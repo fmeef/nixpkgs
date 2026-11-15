@@ -3,9 +3,9 @@
   lib,
   pkgsCross,
   buildPythonPackage,
-  fetchFromGitHub,
-  gitUpdater,
-  setuptools-scm,
+  fetchPypi,
+  packaging,
+  setuptools,
   pdfium,
   numpy,
   pillow,
@@ -14,41 +14,21 @@
   python,
 }:
 
-let
-  # They demand their own fork of ctypesgen
-  ctypesgen = buildPythonPackage rec {
-    pname = "ctypesgen";
-    version = "1.1.1+g${src.rev}"; # the most recent tag + git version
-    pyproject = true;
-
-    src = fetchFromGitHub {
-      owner = "pypdfium2-team";
-      repo = "ctypesgen";
-      rev = "3961621c3e057015362db82471e07f3a57822b15";
-      hash = "sha256-0OBY7/Zn12rG20jNYG65lANTRVRIFvE0SgUdYGFpRtU=";
-    };
-
-    build-system = [
-      setuptools-scm
-    ];
-  };
-
-in
 buildPythonPackage rec {
   pname = "pypdfium2";
-  version = "5.11.0";
+  version = "5.15.1";
   pyproject = true;
 
-  src = fetchFromGitHub {
-    owner = "pypdfium2-team";
-    repo = "pypdfium2";
-    tag = version;
-    hash = "sha256-b15g/FlB7lHiu19KotHXMvY1j+m0TZ4xVAy84wBXcbA=";
+  # Use pypi source distribution because it includes their ctypegen fork,
+  # which saves us some hassle keeping multiple checkouts aligned.
+  src = fetchPypi {
+    inherit pname version;
+    hash = "sha256-tGVqDvziG+fyQpA4zj+7QXZEVl/FCFjmWq7SOAHzPUI=";
   };
 
   build-system = [
-    ctypesgen
-    setuptools-scm
+    packaging
+    setuptools
   ];
 
   nativeBuildInputs = [
@@ -78,6 +58,13 @@ buildPythonPackage rec {
     pytestCheckHook
   ];
 
+  # The source distribution omits this empty directory used by the tests.
+  preCheck = ''
+    mkdir -p tests/output
+  '';
+
+  enabledTestPaths = [ "tests" ];
+
   disabledTestPaths = [
     # does not work on ZFS with normalization
     "tests/test_opener.py::test_open_garbled_filename"
@@ -88,9 +75,6 @@ buildPythonPackage rec {
   ];
 
   passthru = {
-    updateScript = gitUpdater {
-      allowedVersions = "^[.0-9]+$";
-    };
     tests.cross = pkgsCross.aarch64-multiplatform.python3Packages.pypdfium2;
   };
 
@@ -98,10 +82,12 @@ buildPythonPackage rec {
     changelog = "https://github.com/pypdfium2-team/pypdfium2/releases/tag/${version}";
     description = "Python bindings to PDFium";
     homepage = "https://pypdfium2.readthedocs.io/";
-    license = with lib.licenses; [
-      asl20 # or
-      mit
-    ];
+    license =
+      with lib.licenses;
+      OR [
+        asl20
+        mit
+      ];
     maintainers = with lib.maintainers; [ booxter ];
   };
 }

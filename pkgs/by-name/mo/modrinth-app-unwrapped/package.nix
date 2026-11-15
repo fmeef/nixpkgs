@@ -19,9 +19,11 @@
   replaceVars,
   runCommand,
   rustPlatform,
+  sqlite,
   turbo,
   webkitgtk_4_1,
   xcbuild,
+  zstd,
 }:
 
 let
@@ -31,13 +33,13 @@ in
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "modrinth-app-unwrapped";
-  version = "0.20.2";
+  version = "0.21.6";
 
   src = fetchFromGitHub {
     owner = "modrinth";
     repo = "code";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-PAoRh9McFvX3+F3KdwXoDbgTsrQEnhGIvA0XWCAKn2A=";
+    hash = "sha256-SBrnyAqbsgAhzF/7p3OalvhJVN/LyHRo9I7m3MEWVxg=";
   };
 
   patches = [
@@ -67,7 +69,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
       --replace-fail '1.0.0-local' '${finalAttrs.version}'
   '';
 
-  cargoHash = "sha256-HQYHggmfKlzhgKoP/lnC8wlcUc5BQ8sAjgaKuTUZZus=";
+  cargoHash = "sha256-YQz/DbTZVx1zpct0d4IMBB++RqFg26zmg2Px/xCPa8A=";
 
   mitmCache = gradle.fetchDeps {
     inherit (finalAttrs) pname;
@@ -78,7 +80,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_10;
     fetcherVersion = 3;
-    hash = "sha256-A8mxLcpBX82iZkC66XhdziOvzLxEALEdFw3MBoLLNoo=";
+    hash = "sha256-soooHZJ4OQ+MshWMIhpPURZkMMkpFkZa6AEaiEAm3ts=";
   };
 
   nativeBuildInputs = [
@@ -96,7 +98,12 @@ rustPlatform.buildRustPackage (finalAttrs: {
     xcbuild
   ];
 
-  buildInputs = [ openssl ] ++ lib.optional stdenv.hostPlatform.isLinux webkitgtk_4_1;
+  buildInputs = [
+    openssl
+    sqlite
+  ]
+  ++ lib.optional stdenv.hostPlatform.isLinux webkitgtk_4_1
+  ++ lib.optional stdenv.hostPlatform.isDarwin zstd;
 
   gradleFlags = [
     "-Dfile.encoding=utf-8"

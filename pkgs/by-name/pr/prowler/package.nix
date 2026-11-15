@@ -8,16 +8,14 @@
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "prowler";
-  version = "5.42.0";
+  version = "5.49.0";
   pyproject = true;
-
-  __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "prowler-cloud";
     repo = "prowler";
     tag = finalAttrs.version;
-    hash = "sha256-vt6OtR7qqmulrVaB2YQnwA7Xzbm1QCEDx4YGEpUKeq8=";
+    hash = "sha256-meAHj1jBGPlYSOVSJB3ZRW8eQoBdTehAiBouQUDAH4g=";
   };
 
   postPatch = ''
@@ -51,6 +49,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     azure-mgmt-apimanagement
     azure-mgmt-applicationinsights
     azure-mgmt-authorization
+    azure-mgmt-cognitiveservices
     azure-mgmt-compute
     azure-mgmt-containerregistry
     azure-mgmt-containerservice
@@ -95,6 +94,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     huaweicloudsdkkms
     huaweicloudsdkobs
     huaweicloudsdkrds
+    huaweicloudsdksmn
     huaweicloudsdkvpc
     huaweicloudsdkwaf
     jsonschema
@@ -114,6 +114,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     pygithub
     python-dateutil
     pytz
+    regex
     scaleway
     schema
     shodan

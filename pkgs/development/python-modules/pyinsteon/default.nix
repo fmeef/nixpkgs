@@ -16,20 +16,15 @@
 
 buildPythonPackage rec {
   pname = "pyinsteon";
-  version = "1.6.4";
+  version = "1.8.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "pyinsteon";
     repo = "pyinsteon";
     tag = version;
-    hash = "sha256-iC0qeiTHtrdzQtJ3R01nJDCfdBKBg0jw1v49ZII24/4=";
+    hash = "sha256-76FpayQryjN3vgbmuh87srAgbK3g+ltvP+NbnSNtcb4=";
   };
-
-  patches = [
-    # https://github.com/pyinsteon/pyinsteon/pull/440
-    ./python-3.14.diff
-  ];
 
   build-system = [ setuptools ];
 

@@ -7,23 +7,27 @@
   pytest-asyncio,
   pytest-mock,
   pytestCheckHook,
+  zeroconf,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "python-qube-heatpump";
-  version = "1.13.0";
+  version = "1.17.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "MattieGit";
     repo = "python-qube-heatpump";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-J+KcIcLNFVm8i5P7Zee4fSEc/2Tr1iNddp/Sq5U7Hvw=";
+    hash = "sha256-83eYbL2mS+821f9hDQe/ladPK+ThFawp+Ij7eI8mtng=";
   };
 
   build-system = [ hatchling ];
 
-  dependencies = [ pymodbus ];
+  dependencies = [
+    pymodbus
+    zeroconf
+  ];
 
   nativeCheckInputs = [
     pytest-asyncio

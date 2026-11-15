@@ -102,10 +102,10 @@ buildGoModule (finalAttrs: {
     '';
     homepage = "https://github.com/Zouuup/landrun";
     changelog = "https://github.com/Zouuup/landrun/releases/tag/${finalAttrs.src.tag}";
-    license = lib.licenses.gpl2Only;
+    license = lib.licenses.mit;
     maintainers = [
       lib.maintainers.fliegendewurst
-      lib.maintainers.bpeetz
+      lib.maintainers.soispha
     ];
     platforms = lib.platforms.linux;
   };

@@ -6,6 +6,7 @@
   stdenv,
   makeWrapper,
   nixosTests,
+  zstd,
 }:
 
 let
@@ -14,7 +15,7 @@ let
     packageOverrides = final: prev: {
       django = final.django_6;
       django-allauth-async = final.callPackage ./django-allauth-async.nix { };
-      glitchtip-rust = final.callPackage ./glitchtip-rust.nix { };
+      glitchtip-rust = final.callPackage ./glitchtip-rust.nix { inherit zstd; };
     };
   };
 
@@ -26,7 +27,7 @@ let
       arro3-core
       arro3-io
       boto3
-      cxxfilt
+      brotli
       django
       django-allauth-async
       django-anymail
@@ -54,14 +55,12 @@ let
       orjson
       psycopg
       pydantic
+      pyyaml
       sentry-sdk
-      symbolic
+      servestatic
       user-agents
       uuid6
-      uwsgi-chunked
-      whitenoise
     ]
-    ++ django-allauth-async.optional-dependencies.headless-spec
     ++ django-allauth-async.optional-dependencies.mfa
     ++ django-allauth-async.optional-dependencies.socialaccount
     ++ django-storages.optional-dependencies.boto3
@@ -78,14 +77,14 @@ in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "glitchtip";
-  version = "6.2.6";
+  version = "7.0.0";
   pyproject = true;
 
   src = fetchFromGitLab {
     owner = "glitchtip";
     repo = "glitchtip-backend";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-RGYD6HAFZZTSNJWd8n7/gMy9FkjZno9LO1jGxav5d9M=";
+    hash = "sha256-oqTRlBt7HEaBKvvAX/jZ+kRaeFqe5wy6cq7SyIgZNPY=";
   };
 
   postPatch = ''
@@ -140,7 +139,6 @@ stdenv.mkDerivation (finalAttrs: {
     changelog = "https://gitlab.com/glitchtip/glitchtip-backend/-/blob/v${finalAttrs.version}/CHANGELOG";
     license = lib.licenses.mit;
     maintainers = with lib.maintainers; [
-      defelo
       felbinger
     ];
     mainProgram = "glitchtip-manage";

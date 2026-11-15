@@ -8,17 +8,17 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ols";
-  version = "dev-2026-08";
+  version = "dev-2026-10";
 
   src = fetchFromGitHub {
     owner = "DanielGavin";
     repo = "ols";
     tag = finalAttrs.version;
-    hash = "sha256-dRMDb5RO0yCSOcLeDXk1nkAXaj1mqliuhktpKq4XwUI=";
+    hash = "sha256-tVg9g5aN4ovUElpDzTSLpTQUq3OEiYUaq3YO98ex8wA=";
   };
 
   patches = [
-    ./temp-fix-asm-syntax.diff
+    ./odin-2026-11-compat.patch
   ];
 
   postPatch = ''
@@ -58,6 +58,7 @@ stdenv.mkDerivation (finalAttrs: {
     maintainers = with lib.maintainers; [
       astavie
       atomicptr
+      yvnth
     ];
     mainProgram = "ols";
   };

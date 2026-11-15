@@ -6,16 +6,16 @@
 
 buildNpmPackage rec {
   pname = "auto-entities";
-  version = "2.8.0";
+  version = "2.8.4";
 
   src = fetchFromGitHub {
     owner = "Lint-Free-Technology";
     repo = "lovelace-auto-entities";
     tag = "v${version}";
-    hash = "sha256-jShhP0dxx2FZqVE5SmQ5g5/p9jG9T2V85Ql0oAvT9hA=";
+    hash = "sha256-I6Ug1TmR1zuvvE9i0g9wLUIjeGvr2lV0GdNLhkrmm0s=";
   };
 
-  npmDepsHash = "sha256-ZksTHT4IXU2raJAsUKlmyl5N7VgX193Os+J9pczq05Y=";
+  npmDepsHash = "sha256-N5j5H62fvE1ZiUf+q6EWOCcxo3Lxy59upv1oD9Bqlgk=";
 
   installPhase = ''
     runHook preInstall

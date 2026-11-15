@@ -10,9 +10,18 @@ buildNpmPackage {
   inherit src version;
   pname = "photoprism-frontend";
 
-  npmDepsHash = "sha256-8vi5ETVO2t7evJRPge2Ck7iMNAOIbArNHZ8R8Nrx0o8=";
+  __structuredAttrs = true;
+
+  npmDepsHash = "sha256-/n0AE1yj+T01lu7SDKJcVlExjlF28jHOlH1P0q8xoQA=";
 
   npmWorkspace = "frontend";
+
+  preBuild = ''
+    (
+      cd frontend
+      npm rm sass-embedded
+    )
+  '';
 
   installPhase = ''
     runHook preInstall
@@ -29,6 +38,7 @@ buildNpmPackage {
     homepage = "https://photoprism.app";
     description = "Photoprism's frontend";
     license = lib.licenses.agpl3Only;
+    platforms = lib.platforms.linux;
     maintainers = with lib.maintainers; [
       ipetkov
     ];

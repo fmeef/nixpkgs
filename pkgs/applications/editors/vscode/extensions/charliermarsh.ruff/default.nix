@@ -12,22 +12,22 @@ vscode-utils.buildVscodeMarketplaceExtension {
       sources = {
         "x86_64-linux" = {
           arch = "linux-x64";
-          hash = "sha256-sZ9dwKsCNHIQQDnHRLF7U/sq3tt3MECDjpEwO4emn6I=";
+          hash = "sha256-+nAWyKJHfZoOOj6KVK9ur7SfqapuP70lIvY569HmzLg=";
         };
         "aarch64-linux" = {
           arch = "linux-arm64";
-          hash = "sha256-sUjRLPUM8gc1ddBajfd+C0HQsY87mzQ+/BcXxOS6a0I=";
+          hash = "sha256-tc+G+Pj+M4rXjWRs5opwKCPvaXGmE7tstUqEoA+U5O8=";
         };
         "aarch64-darwin" = {
           arch = "darwin-arm64";
-          hash = "sha256-ifxVrJmXZPdOvfS0Dnl/ns/qtP1UP4RbZhLWs10AweU=";
+          hash = "sha256-7usfWw4EKHcZBzIAO17y0Sh4Ojf4o3B/JkvEscpiKj4=";
         };
       };
     in
     {
       name = "ruff";
       publisher = "charliermarsh";
-      version = "2026.82.0";
+      version = "2026.94.0";
     }
     // sources.${stdenvNoCC.hostPlatform.system}
       or (throw "Unsupported system ${stdenvNoCC.hostPlatform.system}");

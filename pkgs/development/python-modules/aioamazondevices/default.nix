@@ -1,5 +1,6 @@
 {
   aiohttp,
+  anyio,
   beautifulsoup4,
   buildPythonPackage,
   fetchFromGitHub,
@@ -15,20 +16,30 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "aioamazondevices";
-  version = "16.3.0";
+  version = "17.2.7";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "chemelli74";
     repo = "aioamazondevices";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-LasHNM7Uj/9A50mUWdE4E627AMBORYP5FCqNT7mJiVs=";
+    hash = "sha256-romfGSbWiLgnQU7LMZ9WXYYXrr2kpvvIxCBBM2TjIIA=";
   };
+
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace-fail "setuptools>=84.2.1" "setuptools"
+  '';
+
+  pythonRelaxDeps = [
+    "orjson"
+  ];
 
   build-system = [ poetry-core ];
 
   dependencies = [
     aiohttp
+    anyio
     beautifulsoup4
     httpx
     langcodes

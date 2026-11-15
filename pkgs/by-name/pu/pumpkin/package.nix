@@ -2,34 +2,57 @@
   lib,
   rustPlatform,
   fetchFromGitHub,
+  pkg-config,
+  zstd,
   nix-update-script,
   nixosTests,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "pumpkin";
-  version = "0.1.0-unstable-2026-07-25";
+  version = "0.2.0+26.3-26.51";
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "Pumpkin-MC";
     repo = "Pumpkin";
-    rev = "0dfaf5d213e9bc281defa8315945160eddbc7f47";
-    hash = "sha256-b2Ws2zUPouJWFDEeqr3zJ+l0G4BQNg+pYo21LBQDSzk=";
+    tag = "0.2.0+26.3-26.51";
+    hash = "sha256-hV4xWPvdd/vdNEfR6fw0J6jk4JtHIfjC7XtyOLIy8d8=";
     fetchSubmodules = true;
   };
 
-  cargoHash = "sha256-xLFfb6ufSw6M6GIMcfvGfVYwN8kccK4+ufwHjdrLJxI=";
+  cargoHash = "sha256-AgIPV5zexoA4OqTS4navDQM0U29Tg63JPnIjPrI4ssA=";
+
+  nativeBuildInputs = [ pkg-config ];
+
+  buildInputs = [ zstd ];
 
   cargoBuildFlags = [
     "--package"
     "pumpkin"
   ];
+  cargoTestFlags = [
+    "--"
+    # require network access / system CA certificates, fail in sandbox
+    "--skip=license_checker_offline_and_grace_period"
+    "--skip=telemetry::tests::telemetry_client_send_heartbeat_and_shutdown"
+  ];
 
   doCheck = true;
+  # ice_socket_uses_the_shared_udp_port binds a UDP socket on 127.0.0.1
+  __darwinAllowLocalNetworking = true;
+
+  env = {
+    # reduce peak RAM usage during the build
+    CARGO_PROFILE_RELEASE_LTO = "thin";
+    # split codegen into more units (should reduce memory peak)
+    CARGO_PROFILE_RELEASE_CODEGEN_UNITS = "16";
+    # rustc overflows its default 8 MiB stack on pumpkin-data's large generated matches
+    RUST_MIN_STACK = 67108864;
+  };
 
   passthru = {
-    updateScript = nix-update-script { extraArgs = [ "--version=branch" ]; };
+    updateScript = nix-update-script { };
     tests = {
       nixos = nixosTests.pumpkin;
     };

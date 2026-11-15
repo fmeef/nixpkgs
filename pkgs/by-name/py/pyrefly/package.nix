@@ -6,24 +6,31 @@
   fetchFromGitHub,
   versionCheckHook,
   nix-update-script,
+  pkg-config,
   rust-jemalloc-sys,
+  zstd,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "pyrefly";
-  version = "1.3.1";
+  version = "1.4.1";
 
   src = fetchFromGitHub {
-    owner = "facebook";
+    owner = "meta";
     repo = "pyrefly";
     tag = finalAttrs.version;
-    hash = "sha256-xZ+HxB7UQUeVaPK15M6if+7aW4M+4ub397zL7DfduIw=";
+    hash = "sha256-hzHMT9xZnBT8tYt7JeJd4dglCKmOc/2sfJmPHI2o4uU=";
   };
 
   buildAndTestSubdir = "pyrefly";
 
-  cargoHash = "sha256-hPGV6IfgpQy+nd6jHR1bf6mFW6ppePk+Dvt1cC2dI+U=";
+  cargoHash = "sha256-PQ4O4gBDXouiKaBgH7RFrWSdM9gcBFBGJxcSA+n/BwI=";
 
-  buildInputs = [ rust-jemalloc-sys ];
+  nativeBuildInputs = [ pkg-config ];
+
+  buildInputs = [
+    rust-jemalloc-sys
+    zstd
+  ];
 
   nativeInstallCheckInputs = [ versionCheckHook ];
   versionCheckProgramArg = "--version";
@@ -38,6 +45,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
     export TMPDIR=$(mktemp -d)
   '';
 
+  # This test can deadlock
+  checkFlags = [
+    "--skip=test::lsp::lsp_interaction::file_watcher::test_incremental_pattern_addition"
+  ];
+
   # avoid autoupdates for *-dev.* tags
   passthru.updateScript = nix-update-script {
     extraArgs = [ "--version-regex=^([\\d.]+)$" ];
@@ -45,13 +57,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   meta = {
     description = "Fast type checker and IDE for Python";
-    homepage = "https://github.com/facebook/pyrefly";
+    homepage = "https://github.com/meta/pyrefly";
     license = lib.licenses.mit;
     mainProgram = "pyrefly";
     platforms = lib.platforms.linux ++ lib.platforms.darwin;
     maintainers = with lib.maintainers; [
       cybardev
       QuiNzX
+      evanwporter
     ];
   };
 })

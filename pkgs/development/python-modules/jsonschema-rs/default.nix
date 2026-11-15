@@ -7,11 +7,13 @@
   nix-update-script,
   pytestCheckHook,
   rustPlatform,
+  pkg-config,
+  aws-lc,
 }:
 
 buildPythonPackage rec {
   pname = "jsonschema-rs";
-  version = "0.46.5";
+  version = "0.51.0";
 
   pyproject = true;
 
@@ -19,17 +21,22 @@ buildPythonPackage rec {
   src = fetchPypi {
     inherit version;
     pname = "jsonschema_rs";
-    hash = "sha256-hX434HWi2fbyPepYpVmlW2Y9OHmiUhcABLVpBz2rHvM=";
+    hash = "sha256-FR0Ax0doqUAQ+rvBFWBxg47I3N+ki57+00pUKxNG7w4=";
   };
 
   cargoDeps = rustPlatform.fetchCargoVendor {
     inherit pname version src;
-    hash = "sha256-HnrbyfuKIaYKs3ux8Du/PabPNpNu1v37Qm/5gJM6arw=";
+    hash = "sha256-zfV64UD6hbU5qfpecnlt7Q0kXP9KLQtMTdiNcXy9hOw=";
   };
 
   nativeBuildInputs = with rustPlatform; [
     cargoSetupHook
     maturinBuildHook
+    pkg-config
+  ];
+
+  buildInputs = [
+    aws-lc
   ];
 
   nativeCheckInputs = [

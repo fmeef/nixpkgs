@@ -8,7 +8,7 @@
 }:
 buildGo127Module (finalAttrs: {
   pname = "jjui";
-  version = "0.10.10";
+  version = "0.10.13";
   __structuredAttrs = true;
   strictDeps = true;
 
@@ -16,10 +16,10 @@ buildGo127Module (finalAttrs: {
     owner = "idursun";
     repo = "jjui";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-bNwWbQq76RztLIiu/uYtHwRvg6H3x59ASCiFRKBib04=";
+    hash = "sha256-PWVdG6pWe01yqIS+jQXGhdt5IVbp2QwTJ1Xx29M2s8E=";
   };
 
-  vendorHash = "sha256-T+uv54h89ul0O30HXsngUAIEEfD52bS+zZagCpn8JBU=";
+  vendorHash = "sha256-HsS83QvwtKzQigmw3o04fYczvQdLSHXZ2TWsKYTsAoc=";
 
   excludedPackages = [
     # docker-based pty tests

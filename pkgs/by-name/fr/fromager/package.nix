@@ -1,20 +1,21 @@
 {
   lib,
   fetchFromGitHub,
+  gitMinimal,
   python3Packages,
   writableTmpDirAsHomeHook,
 }:
 
 python3Packages.buildPythonApplication (finalAttrs: {
   pname = "fromager";
-  version = "0.95.0";
+  version = "0.103.0";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "python-wheel-build";
     repo = "fromager";
     tag = finalAttrs.version;
-    hash = "sha256-9+JYWEVfqG8e0OYE0AxTTtGESLTR/xcZhQMsDEuAM34=";
+    hash = "sha256-0errYzOdvjMDiSU9XF2n6fVIBheH3YIafihEyifJ4Ao=";
   };
 
   build-system = with python3Packages; [
@@ -46,7 +47,9 @@ python3Packages.buildPythonApplication (finalAttrs: {
   ];
 
   nativeCheckInputs = with python3Packages; [
+    gitMinimal
     pytestCheckHook
+    pytest-socket
     pytest-xdist
     requests-mock
     spdx-tools

@@ -27,7 +27,7 @@
   libsmi,
   libssh,
   libxml2,
-  lua5_4,
+  lua5_5,
   lz4,
   makeWrapper,
   minizip,
@@ -60,7 +60,7 @@ in
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "wireshark-${if withQt then "qt" else "cli"}";
-  version = "4.6.8";
+  version = "4.6.9";
 
   outputs = [
     "out"
@@ -71,7 +71,7 @@ stdenv.mkDerivation (finalAttrs: {
     repo = "wireshark";
     owner = "wireshark";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-qUC2k8LZQxmSu19jj1LHM+oQiF/ao+rV6wwRQhISuzk=";
+    hash = "sha256-kTtrizE6WExIKlX3wEbYJ11ebV1olj5tpipjaoSrxaA=";
   };
 
   patches = [
@@ -116,7 +116,7 @@ stdenv.mkDerivation (finalAttrs: {
     libsmi
     libssh
     libxml2
-    lua5_4
+    lua5_5
     lz4
     minizip
     nghttp2

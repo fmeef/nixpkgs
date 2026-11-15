@@ -5,9 +5,12 @@
   pkg-config,
   meson,
   ninja,
+  systemdSupport ? lib.meta.availableOn stdenv.hostPlatform systemd,
   systemd,
   liburing,
   zstd,
+  # Absolute path of the database that updatedb writes and plocate reads by default.
+  dbPath ? "/var/cache/locatedb",
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "plocate";
@@ -22,6 +25,12 @@ stdenv.mkDerivation (finalAttrs: {
   postPatch = ''
     sed -i meson.build \
       -e '/mkdir\.sh/d'
+  ''
+  # musl's <sys/stat.h> (pulled in via <liburing.h>) defines struct statx,
+  # clashing with the <linux/stat.h> include.
+  + lib.optionalString stdenv.hostPlatform.isMusl ''
+    substituteInPlace io_uring_engine.h \
+      --replace-fail '#include <linux/stat.h>' ""
   '';
 
   nativeBuildInputs = [
@@ -31,15 +40,15 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildInputs = [
-    systemd
     liburing
     zstd
-  ];
+  ]
+  ++ lib.optionals systemdSupport [ systemd ];
 
   mesonFlags = [
     "-Dsystemunitdir=${placeholder "out"}/etc/systemd/system"
-    "-Dsharedstatedir=/var/cache"
-    "-Ddbpath=locatedb"
+    "-Dsharedstatedir=${builtins.dirOf dbPath}"
+    "-Ddbpath=${builtins.baseNameOf dbPath}"
   ];
 
   meta = {

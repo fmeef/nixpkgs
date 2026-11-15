@@ -2,6 +2,8 @@
   lib,
   fetchFromGitHub,
   openssl,
+  zstd,
+  sqlite,
   pkg-config,
   rustPlatform,
   nix-update-script,
@@ -13,7 +15,6 @@ rustPlatform.buildRustPackage (finalAttrs: {
   version = "3.3.0";
 
   __structuredAttrs = true;
-  strictDeps = true;
 
   src = fetchFromGitHub {
     owner = "nix-community";
@@ -29,6 +30,8 @@ rustPlatform.buildRustPackage (finalAttrs: {
   nativeBuildInputs = [ pkg-config ];
   buildInputs = [
     openssl
+    zstd
+    sqlite
   ];
 
   passthru = {

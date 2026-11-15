@@ -8,28 +8,36 @@
   dateparser,
   fetchFromGitHub,
   marshmallow-dataclass,
-  poetry-core,
   pyjwt,
+  pyprojectVersionPatchHook,
   pytest-asyncio,
   pytestCheckHook,
-  syrupy_6,
+  syrupy,
   tabulate,
   typeguard,
+  uv-build,
 }:
 
 buildPythonPackage (finalAttrs: {
   pname = "renault-api";
-  version = "0.5.13";
+  version = "0.6.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "hacf-fr";
     repo = "renault-api";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-+kzIPnz34uTjUQ9hksxr3RIEg0+/w+8BdoH+ruenzi0=";
+    hash = "sha256-GymSyI5/nDFQ2Mrh//Q9B77aIR0lfgrTYWWcmdFRnfE=";
   };
 
-  build-system = [ poetry-core ];
+  postPatch = ''
+    substituteInPlace pyproject.toml \
+      --replace-fail "uv_build>=0.13,<0.14" "uv_build"
+  '';
+
+  build-system = [ uv-build ];
+
+  nativeBuildInputs = [ pyprojectVersionPatchHook ];
 
   dependencies = [
     aiohttp
@@ -50,7 +58,7 @@ buildPythonPackage (finalAttrs: {
     aiointercept
     pytest-asyncio
     pytestCheckHook
-    syrupy_6
+    syrupy
     typeguard
   ]
   ++ lib.flatten (builtins.attrValues finalAttrs.passthru.optional-dependencies);

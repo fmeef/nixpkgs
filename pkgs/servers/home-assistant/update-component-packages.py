@@ -23,7 +23,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
-from functools import reduce
+from functools import cache, reduce
 from io import BytesIO
 from typing import Any
 from urllib.request import urlopen
@@ -39,12 +39,13 @@ PKG_SET = "home-assistant.python3Packages"
 # If some requirements are matched by multiple or no Python packages, the
 # following can be used to choose the correct one
 PKG_PREFERENCES = {
+    "anthropic": "anthropic",
     "av": "av",
-    "caldav": "caldav",
     "fiblary3": "fiblary3-fork",  # https://github.com/home-assistant/core/issues/66466
     "fints": "fints",
     "HAP-python": "hap-python",
     "ha-av": "av",
+    "mcp": "mcp",
     "numpy": "numpy",
     "ollama-hass": "ollama",
     "paho-mqtt": "paho-mqtt",
@@ -71,7 +72,6 @@ EXTRA_COMPONENT_DEPS = {
 OUR_VERSION_IS_NEWER_THAN = {
     "blinkstick": "1.2.0",
     "gps3": "0.33.3",
-    "ouman-eh-800-api": "0.5.0",
     "proxmoxer": "2.2.0",
     "py-cpuinfo": "9.0.0",
     "pybluez": "0.22",
@@ -111,7 +111,7 @@ def parse_components(version: str = "master"):
                 components_with_tests.append(entry.name)
 
         sys.path.append(core_path)
-        from script.hassfest.model import Config, Integration  # type: ignore
+        from packages.hassfest.hassfest.model import Config, Integration  # type: ignore
 
         config = Config(
             root=pathlib.Path(core_path),
@@ -149,6 +149,7 @@ def repository_root() -> str:
 
 
 # For a package attribute and an extra, check if the package exposes it via passthru.optional-dependencies
+@cache
 def has_extra(package: str, extra: str):
     cmd = [
         "nix-instantiate",
@@ -191,23 +192,17 @@ def name_to_attr_path(req: str, packages: dict[str, dict[str, str]]) -> str | No
     if req in PKG_PREFERENCES:
         return f"{PKG_SET}.{PKG_PREFERENCES[req]}"
     attr_paths = []
-    names = [req]
-    # E.g. python-mpd2 is actually called python3.6-mpd2
-    # instead of python-3.6-python-mpd2 inside Nixpkgs
-    if req.startswith(("python-", "python_")):
-        names.append(req[len("python-") :])
-    for name in names:
-        # treat "-" and "_" equally
-        name = re.sub("[-_]", "[-_]", name)
-        # python(minor).(major)-(pname)-(version or unstable-date)
-        # we need the version qualifier, or we'll have multiple matches
-        # (e.g. pyserial and pyserial-asyncio when looking for pyserial)
-        pattern = re.compile(
-            f"^python\\d+\\.\\d+-{name}-(?:\\d|unstable-.*)", re.IGNORECASE
-        )
-        for attr_path, package in packages.items():
-            if pattern.match(package["name"]):
-                attr_paths.append(attr_path)
+    # treat "-" and "_" equally
+    name = re.sub("[-_]", "[-_]", req)
+    # python(minor).(major)-(pname)-(version or unstable-date)
+    # we need the version qualifier, or we'll have multiple matches
+    # (e.g. pyserial and pyserial-asyncio when looking for pyserial)
+    pattern = re.compile(
+        f"^python\\d+\\.\\d+-{name}-(?:\\d|unstable-.*)", re.IGNORECASE
+    )
+    for attr_path, package in packages.items():
+        if pattern.match(package["name"]):
+            attr_paths.append(attr_path)
     # Let's hope there's only one derivation with a matching name
     assert len(attr_paths) <= 1, f"{req} matches more than one derivation: {attr_paths}"
     if attr_paths:
@@ -352,5 +347,4 @@ def main() -> None:
 if __name__ == "__main__":
     run_sync(["pyright", __file__])
     run_sync(["ruff", "check", "--ignore=E501,EXE", __file__])
-    run_sync(["isort", __file__])
     main()

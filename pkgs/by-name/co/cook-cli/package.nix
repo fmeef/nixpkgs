@@ -6,24 +6,31 @@
   rustPlatform,
   pkg-config,
   openssl,
+  sqlite,
   nodejs,
   nix-update-script,
 }:
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "cook-cli";
-  version = "0.36.0";
+  version = "0.39.0";
 
   src = fetchFromGitHub {
     owner = "cooklang";
     repo = "cookcli";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-ihsVvlyp//A4pNlt1+DlYWyz52enHVeU6uST7bxcwqw=";
+    hash = "sha256-Q3dQSnRJaecYkDWTwh/k3PROOSp+1uvQP9yNcCsnnc4=";
   };
 
-  cargoHash = "sha256-e47x9XzABpXO+qvTydrBOPU9KTZTYJkbJvWvpUUh7Bo=";
+  cargoHash = "sha256-YSpZDF/YkZ+UsEHK2pJkZSWUc/B2aPeMs6xoyGy69fs=";
 
   # Build without the self-updating feature
   buildNoDefaultFeatures = true;
+  buildFeatures = [
+    "sync"
+    "server"
+    "import"
+    "lsp"
+  ];
 
   nativeBuildInputs = [
     pkg-config
@@ -34,13 +41,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   buildInputs = [
     openssl
+    sqlite
   ];
 
   env.OPENSSL_NO_VENDOR = 1;
 
   npmDeps = fetchNpmDeps {
     inherit (finalAttrs) src;
-    hash = "sha256-n/pxjcgDqhlUC09ynWExxClVT9WixahpPYRU3GAvzBc=";
+    hash = "sha256-rQDKNk7PQdYBvtah8oziVWWaKT55zd6vu/KghMceGek=";
   };
 
   preBuild = ''

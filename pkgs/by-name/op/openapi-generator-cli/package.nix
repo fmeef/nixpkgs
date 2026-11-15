@@ -30,7 +30,7 @@ let
       "jdk.unsupported"
     ];
   };
-  version = "7.25.0";
+  version = "7.27.0";
   mainProgram = "openapi-generator-cli";
   this = maven.buildMavenPackage {
     inherit version;
@@ -41,7 +41,7 @@ let
       owner = "OpenAPITools";
       repo = "openapi-generator";
       tag = "v${version}";
-      hash = "sha256-smgA02D6LX/BAAhz5C3cJNW4tMx/z5Up6jhnPl04csg=";
+      hash = "sha256-NGTwKOdFt4dOCng2TO8G2Gc+4cgxPRxVWyHriL92VxU=";
     };
 
     patches = [
@@ -52,7 +52,7 @@ let
       })
     ];
 
-    mvnHash = "sha256-XRUDsVXu11lYmgFkGBqCUQFTb1rfmkrpCa/sX/b4Jfg=";
+    mvnHash = "sha256-Ww7ir2YSARXAWiHzW+UZttjeMylCILkhLFFAwuhjB00=";
     mvnParameters = "-Duser.home=$TMPDIR";
     doCheck = false;
 

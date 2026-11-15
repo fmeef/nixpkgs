@@ -4,6 +4,7 @@
   fetchFromGitHub,
   pkg-config,
   openssl,
+  aws-lc,
 }:
 
 rustPlatform.buildRustPackage (finalAttrs: {
@@ -19,10 +20,11 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   cargoHash = "sha256-VDPyBm0v2DZEXpEbOMwbrvBvjELHEzRAgTJnm3MRrVY=";
 
-  buildInputs = [ openssl ];
+  buildInputs = [
+    openssl
+    aws-lc
+  ];
   nativeBuildInputs = [ pkg-config ];
-
-  strictDeps = true;
 
   # This requires a running rabbitmq instance to communicate with that needs
   # to be set up by hand. It should be possible to run tests in the future

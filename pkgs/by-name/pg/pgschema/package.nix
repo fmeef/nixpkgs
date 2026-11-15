@@ -10,14 +10,14 @@
 
 buildGoModule (finalAttrs: {
   pname = "pgschema";
-  version = "1.13.0";
+  version = "1.14.1";
   __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "pgplex";
     repo = "pgschema";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-w1MLl9NFAS+7a1CzS5IMQUw6BzL8sifNPdnStLySFVg=";
+    hash = "sha256-shpZ13DHHqJkpLcj1+ME5FluLKEN1TnPNRxP4Mpe1lI=";
   };
 
   # Adapted from $src/nix/pgschema.nix

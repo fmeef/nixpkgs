@@ -1,40 +1,59 @@
 {
   lib,
   fetchFromGitHub,
-  buildGo127Module,
+  buildGoModule,
   installShellFiles,
   stdenv,
   versionCheckHook,
   makeWrapper,
+
+  writableTmpDirAsHomeHook,
+  git,
+  openssh,
 }:
 
-buildGo127Module (finalAttrs: {
+buildGoModule (finalAttrs: {
   pname = "gh";
-  version = "2.101.0";
+  version = "2.104.0";
 
   __structuredAttrs = true;
+  separateDebugInfo = true;
 
   src = fetchFromGitHub {
     owner = "cli";
     repo = "cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-EoKF2m5sZP+uQ5AVOKkFqSCACfkeUc7vnH8PHWCO6FE=";
+    hash = "sha256-DkspgQoWfbWi+jWR5U9Zyo9dnDFsFtYTLNe+5QHoK5c=";
+
+    postCheckout = ''
+      git -C "$out" log -1 --pretty=%ct > $out/SOURCE_DATE_EPOCH
+    '';
   };
 
-  vendorHash = "sha256-4KYQBgMNc/sI0mbcXSfJ7A/77VAS6NM8TOzQ3w7AlK8=";
+  vendorHash = "sha256-ggv4DIkA25qacx65RZ2mPWpbTcbl4KaZoj+JEkfwPXI=";
 
   nativeBuildInputs = [
     installShellFiles
     makeWrapper
   ];
 
-  # N.B.: using the Makefile is intentional.
-  # We pass "nixpkgs" for build.Date to avoid `gh --version` reporting a very old date.
-  buildPhase = ''
-    runHook preBuild
-    make GO_LDFLAGS="-s -w -X github.com/cli/cli/v${lib.versions.major finalAttrs.version}/internal/build.Date=nixpkgs" GH_VERSION=${finalAttrs.version} bin/gh ${lib.optionalString (stdenv.buildPlatform.canExecute stdenv.hostPlatform) "manpages"}
-    runHook postBuild
+  # N.B.: using make (via the generic buildPhase) is intentional.
+  buildPhase = null;
+
+  # The custom build script (script/build.go) invoked by make will pick up SOURCE_DATE_EPOCH.
+  # It is used as the build date given by gh --version.
+  postPatch = ''
+    export SOURCE_DATE_EPOCH=$(cat SOURCE_DATE_EPOCH)
   '';
+
+  makeFlags = [
+    "bin/gh"
+  ]
+  ++ lib.optionals (stdenv.buildPlatform.canExecute stdenv.hostPlatform) [
+    "manpages"
+  ];
+
+  env.GH_VERSION = finalAttrs.version;
 
   installPhase = ''
     runHook preInstall
@@ -54,8 +73,18 @@ buildGo127Module (finalAttrs: {
     runHook postInstall
   '';
 
-  # most tests require network access
-  doCheck = false;
+  nativeCheckInputs = [
+    openssh
+    git
+    writableTmpDirAsHomeHook
+  ];
+  doCheck = true;
+  __darwinAllowLocalNetworking = finalAttrs.finalPackage.doCheck;
+  checkPhase = ''
+    runHook preCheck
+    go test ./...
+    runHook postCheck
+  '';
 
   nativeInstallCheckInputs = [ versionCheckHook ];
   doInstallCheck = true;
@@ -63,7 +92,8 @@ buildGo127Module (finalAttrs: {
   meta = {
     description = "GitHub CLI tool";
     homepage = "https://cli.github.com/";
-    changelog = "https://github.com/cli/cli/releases/tag/v${finalAttrs.version}";
+    downloadPage = "https://github.com/cli/cli";
+    changelog = "https://github.com/cli/cli/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.mit;
     mainProgram = "gh";
     maintainers = with lib.maintainers; [

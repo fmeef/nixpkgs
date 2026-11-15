@@ -6,6 +6,7 @@
   pkg-config,
   protobuf,
   fontconfig,
+  aws-lc,
   libgit2,
   openssl,
   sqlite,
@@ -99,7 +100,7 @@ let
 in
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "zed-editor";
-  version = "1.20.1";
+  version = "1.28.1";
 
   outputs = [
     "out"
@@ -112,7 +113,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "zed-industries";
     repo = "zed";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-jlCCbaboiRvHwMfEMu2BYpH6eb4Pk4pUOyoFCkuuSnY=";
+    hash = "sha256-3FtJA++1yvpAcWgjUrWkRnN/SirfAj66kjQ/iSdrNpQ=";
   };
 
   postPatch = ''
@@ -135,7 +136,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
       --replace-fail 'builder.include(&glib_path_config);' 'builder.include("${lib.getLib glib}/lib/glib-2.0/include");'
   '';
 
-  cargoHash = "sha256-6L9O1K/SEfU6GeRckB3UvJsMkped+X7OCPTRkNhYb+Y=";
+  cargoHash = "sha256-1rPsY1UrDAUhe7FlLm2GqTFNzW9XwVP7Lcv7hUcyRdo=";
 
   __structuredAttrs = true;
 
@@ -155,6 +156,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
   dontUseCmakeConfigure = true;
 
   buildInputs = [
+    aws-lc
     libgit2
     sqlite
     zlib
@@ -245,6 +247,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   useNextest = true;
 
+  checkFlags = [
+    # GPUI debug selectors are disabled in release builds, so this UI test
+    # cannot look up the footer's bounds.
+    # https://github.com/zed-industries/zed/issues/65611
+    "--skip"
+    "watcher_debug::tests::tabs_separate_rows_and_keep_footer_visible"
+  ];
+
   remoteServerExecutableName = "zed-remote-server-${channel}-${finalAttrs.version}+${channel}";
   installPhase = ''
     runHook preInstall
@@ -256,10 +266,14 @@ rustPlatform.buildRustPackage (finalAttrs: {
     mv $release_target/zed target/release/zed
 
     pushd crates/zed
-    # Note that this is GNU sed, while Zed's bundle-mac uses BSD sed
-    sed -i "s/package.metadata.bundle-stable/package.metadata.bundle/" Cargo.toml
+    # Select the stable bundle and migrate its macOS keys to cargo-bundle 0.12's schema.
+    substituteInPlace Cargo.toml \
+      --replace-fail '[package.metadata.bundle-stable]' '[package.metadata.bundle]' \
+      --replace-fail 'osx_minimum_system_version' 'osx.minimum_system_version' \
+      --replace-fail 'osx_info_plist_exts' 'osx.info_plist_exts' \
+      --replace-fail 'osx_url_schemes' 'osx.url_schemes'
     export CARGO_BUNDLE_SKIP_BUILD=true
-    app_path=$(cargo bundle --release | xargs)
+    app_path=$(cargo bundle --release --format osx | xargs)
     popd
 
     mkdir -p $out/Applications $out/bin
@@ -292,7 +306,7 @@ rustPlatform.buildRustPackage (finalAttrs: {
     )
   ''
   + lib.optionalString buildRemoteServer ''
-    install -Dm755 $release_target/remote_server $remote_server/bin/${finalAttrs.remoteServerExecutableName}
+    install -Dm755 $release_target/remote-server $remote_server/bin/${finalAttrs.remoteServerExecutableName}
   ''
   + ''
     runHook postInstall

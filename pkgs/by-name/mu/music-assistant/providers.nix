@@ -1,7 +1,7 @@
 # Do not edit manually, run ./update-providers.py
 
 {
-  version = "2.10.3";
+  version = "2.10.11";
   builtins = [
     "builtin"
     "coverartarchive"
@@ -32,6 +32,7 @@
     airplay =
       ps: with ps; [
         pyatv
+        srptools
       ];
     airplay_receiver = ps: [
     ];
@@ -364,8 +365,9 @@
     ];
     wiim =
       ps: with ps; [
+        pywiim
         wiim
-      ]; # missing pywiim
+      ];
     wikipedia = ps: [
     ];
     yandex_music =

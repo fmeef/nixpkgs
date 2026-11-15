@@ -10,14 +10,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "besen";
-  version = "0.3.4";
+  version = "0.6.1";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "moryoav";
-    repo = "besen";
+    repo = "py-besen";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-abWF9v1snIscua2PzesuxYS4IYKYrq8dSfjbnzT4P/A=";
+    hash = "sha256-wj525BEtN/1nG7hKzGBQB1v+npgPg4FSTPvWNMN5mFw=";
   };
 
   build-system = [ setuptools ];
@@ -29,19 +29,12 @@ buildPythonPackage (finalAttrs: {
     pytestCheckHook
   ];
 
-  # The other tests are for the bundled Home Assistant integration
-  pytestFlags = [
-    "tests/test_client.py"
-    "tests/test_models.py"
-    "tests/test_protocol.py"
-  ];
-
   pythonImportsCheck = [ "besen" ];
 
   meta = {
     description = "Async Python client for Besen EV chargers over BLE";
-    homepage = "https://github.com/moryoav/besen";
-    changelog = "https://github.com/moryoav/besen/releases/tag/${finalAttrs.src.tag}";
+    homepage = "https://github.com/moryoav/py-besen";
+    changelog = "https://github.com/moryoav/py-besen/releases/tag/${finalAttrs.src.tag}";
     license = lib.licenses.mit;
     maintainers = [ lib.maintainers.jamiemagee ];
   };

@@ -7,30 +7,29 @@
 
 buildNpmPackage (finalAttrs: {
   pname = "weather-radar-card";
-  version = "3.9.0";
+  version = "4.0.0";
 
   src = fetchFromGitHub {
     owner = "jpettitt";
     repo = "weather-radar-card";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-NvxkVEuXrVO95qR7YBU1WSdZXTlHsOkVB39ZGwis/lw=";
+    hash = "sha256-bt757cl8S3rPQbZbcCj2Icxm+ojtlCeaj3xBX/j4xi8=";
   };
 
   postPatch = ''
-    substituteInPlace src/radar-toolbar.ts \
+    substituteInPlace src/marker-icon.ts src/radar-toolbar.ts src/vector-basemap.ts \
       --replace-fail "/local/community/weather-radar-card/" "/local/nixos-lovelace-modules/"
   '';
 
   npmDepsFetcherVersion = 2;
   npmFlags = [ "--legacy-peer-deps" ];
-  npmDepsHash = "sha256-/PU0e4A5RH7g5jE0+Ai2y4MvOa6D2+7G+wcsv18orYk=";
+  npmDepsHash = "sha256-pTs3PrXipuoJWAhCFx8I/diprSkl3o0wwbQmNIkuaSE=";
 
   installPhase = ''
     runHook preInstall
 
     mkdir $out
-    shopt -s extglob
-    cp -r dist/!(*.gz) $out/
+    cp -r dist/* $out/
 
     runHook postInstall
   '';
@@ -40,7 +39,7 @@ buildNpmPackage (finalAttrs: {
   __structuredAttrs = true;
 
   meta = {
-    description = "Rrain radar card using the tiled images from RainViewer";
+    description = "Rain radar card using the tiled images from RainViewer";
     homepage = "https://github.com/jpettitt/weather-radar-card";
     changelog = "https://github.com/jpettitt/weather-radar-card/blob/${finalAttrs.src.rev}/CHANGELOG.md";
     license = lib.licenses.mit;

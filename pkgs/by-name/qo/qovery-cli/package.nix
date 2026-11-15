@@ -1,29 +1,29 @@
 {
   lib,
   stdenv,
-  buildGoModule,
+  buildGo127Module,
   fetchFromGitHub,
   installShellFiles,
   versionCheckHook,
   writableTmpDirAsHomeHook,
 }:
 
-buildGoModule (finalAttrs: {
+buildGo127Module (finalAttrs: {
   pname = "qovery-cli";
-  version = "1.169.0";
+  version = "1.182.0";
 
   src = fetchFromGitHub {
     owner = "Qovery";
     repo = "qovery-cli";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-opHxGDUxVgUE02oobyqn4JnXoaNQAN+y1bqXfz+xDcI=";
+    hash = "sha256-JaHVm+bQE/c/169nqpUZ1B18JUl6Yyf40eKEYZ8EiTU=";
   };
 
-  vendorHash = "sha256-XfvbfEVeHMTtNmxqfuOxl4PhH756rIRPnbNPRpyaSuU=";
+  vendorHash = "sha256-93UKGHBSiR2+Z7/3UdFwtvtEC74tQl5QgQPTRHbUaM0=";
 
   env.CGO_ENABLED = 0;
 
-  ldflags = [ "-X github.com/qovery/qovery-cli/utils.Version=v${finalAttrs.version}" ];
+  ldflags = [ "-X=github.com/qovery/qovery-cli/utils.Version=v${finalAttrs.version}" ];
 
   nativeBuildInputs = [ installShellFiles ];
 

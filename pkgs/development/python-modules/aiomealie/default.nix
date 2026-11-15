@@ -1,7 +1,7 @@
 {
   lib,
   aiohttp,
-  aioresponses,
+  aiointercept,
   awesomeversion,
   buildPythonPackage,
   fetchFromGitHub,
@@ -18,14 +18,14 @@
 
 buildPythonPackage (finalAttrs: {
   pname = "aiomealie";
-  version = "2.0.0";
+  version = "2.1.3";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "joostlek";
     repo = "python-mealie";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-5ndyDoRQLpFB680j9n2uMqZS/RoxmIKYUgbculuWWpk=";
+    hash = "sha256-yf/16+Yi7Wvafl9mH5ah6SYbMtrhIXsn/4ajyjidR+M=";
   };
 
   build-system = [ hatchling ];
@@ -43,7 +43,7 @@ buildPythonPackage (finalAttrs: {
   ];
 
   nativeCheckInputs = [
-    aioresponses
+    aiointercept
     pytest-asyncio
     pytest-cov-stub
     pytestCheckHook

@@ -38,13 +38,15 @@ in
 
 buildGoModule (finalAttrs: {
   pname = "tinygo";
-  version = "0.42.0";
+  version = "0.43.0";
+
+  __structuredAttrs = true;
 
   src = fetchFromGitHub {
     owner = "tinygo-org";
     repo = "tinygo";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-9XIqkrq8lInPpQ7G2D5gxRs8Q+pf5ry6JMgvf6dXxds=";
+    hash = "sha256-TB0M1MCDIsDGfNHm5XJu9Cip/M6XxQ6zjcjRI+W5o/I=";
     fetchSubmodules = true;
     # The public hydra server on `hydra.nixos.org` is configured with
     # `max_output_size` of 3GB. The purpose of this `postFetch` step
@@ -102,7 +104,7 @@ buildGoModule (finalAttrs: {
     export PATH=${bootstrapTools}:$PATH
     export HOME=$TMPDIR
 
-    ldflags=("''$ldflags[@]/\"-buildid=\"")
+    ldflags=("''${ldflags[@]/-buildid=}")
   '';
 
   postBuild = ''
@@ -128,7 +130,7 @@ buildGoModule (finalAttrs: {
     openocd
     binaryen
   ]
-  ++ lib.optionals (!(stdenv.hostPlatform.isDarwin && stdenv.hostPlatform.isAarch64)) [ gdb ];
+  ++ lib.optionals (!stdenv.hostPlatform.isDarwin) [ gdb ];
 
   installPhase = ''
     runHook preInstall
